@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro | Speak AI⁺ — EU⁺ Executivo</title>
+    <!-- Fontes Oficiais -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-principal: #060E18;
+            --bg-secundario: #0A1624;
+            --dourado: #C4974A;
+            --dourado-subtle: rgba(196,151,74,0.18);
+            --txt-principal: #EEF0F2;
+            --txt-secundario: #7A8FA3;
+        }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .card-cadastro {
+            background-color: var(--bg-secundario);
+            border: 1px solid var(--dourado-subtle);
+            padding: 50px;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 2.2rem;
+            color: var(--txt-principal);
+            margin: 0 0 10px 0;
+            letter-spacing: 0.02em;
+        }
+        h1 span.sup {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            color: var(--dourado);
+            font-size: 0.42em;
+            vertical-align: super;
+        }
+        .tagline {
+            color: var(--txt-secundario);
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+        .form-group {
+            margin-bottom: 22px;
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--txt-secundario);
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        input, select {
+            width: 100%;
+            background-color: var(--bg-principal);
+            border: 1px solid var(--dourado-subtle);
+            padding: 12px 16px;
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            border-radius: 2px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--dourado);
+        }
+        button {
+            width: 100%;
+            background-color: transparent;
+            border: 1px solid var(--dourado);
+            color: var(--txt-principal);
+            padding: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: var(--dourado);
+            color: var(--bg-principal);
+        }
+        footer {
+            padding: 25px;
+            text-align: center;
+            border-top: 1px solid var(--dourado-subtle);
+            font-size: 0.8rem;
+            color: var(--txt-secundario);
+            letter-spacing: 0.05em;
+        }
+        footer a {
+            color: var(--txt-secundario);
+            text-decoration: none;
+        }
+        footer a:hover { color: var(--dourado); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card-cadastro">
+            <h1>Speak AI<span class="sup">⁺</span></h1>
+            <div class="tagline">Estrutura para quem lidera. Entre no ecossistema.</div>
+            
+            <form id="formCadastro">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="nome" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>E-mail Corporativo</label>
+                    <input type="email" id="email" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp</label>
+                    <input type="tel" id="whatsapp" placeholder="Ex: 27999998888" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Nível Estimado de Inglês</label>
+                    <select id="nivel_inicial">
+                        <option value="A1">A1 - Iniciante Prático</option>
+                        <option value="B1">B1 - Intermediário Técnico</option>
+                        <option value="C1">C1 - Executivo / Fluente</option>
+                    </select>
+                </div>
+                <button type="submit">Solicitar Acesso</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+        <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+    </footer>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
+
+        document.getElementById('formCadastro').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "PROCESSANDO...";
+            btn.disabled = true;
+
+            const payload = {
+                acao: "cadastrar_aluno",
+                dados: {
+                    nome: document.getElementById('nome').value,
+                    email: document.getElementById('email').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    nivel_inicial: document.getElementById('nivel_inicial').value
+                }
+            };
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Configuração padrão para integração limpa via Apps Script
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                alert("Solicitação processada com sucesso no ecossistema EU⁺! Seu ambiente está sendo criado.");
+                window.location.href = "https://eumaisempresa.github.io/speakai/aluno/";
+            } catch (err) {
+                alert("Erro ao conectar com o servidor. Tente novamente.");
+                btn.innerText = "SOLICITAR ACESSO";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
