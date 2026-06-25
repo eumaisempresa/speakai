@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Gestor | Speak AI⁺ — EU⁺ Gestor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-principal: #060E18;
+            --bg-secundario: #0A1624;
+            --bg-terciario: #0E1E30;
+            --dourado: #C4974A;
+            --dourado-subtle: rgba(196,151,74,0.18);
+            --txt-principal: #EEF0F2;
+            --txt-secundario: #7A8FA3;
+        }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: var(--bg-secundario);
+            border-bottom: 1px solid var(--dourado-subtle);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        h1 span.sup {
+            font-weight: 600;
+            color: var(--dourado);
+            font-size: 0.42em;
+            vertical-align: super;
+        }
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--txt-secundario);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .main-content {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .table-container {
+            background-color: var(--bg-secundario);
+            border: 1px solid var(--dourado-subtle);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-terciario);
+            color: var(--txt-secundario);
+            font-weight: 400;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--dourado-subtle);
+        }
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(122,143,163,0.1);
+            font-size: 0.95rem;
+            color: var(--txt-principal);
+        }
+        tr:hover {
+            background-color: rgba(14,30,48,0.4);
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .badge.ativo { background-color: rgba(122,173,102,0.15); color: #7AAD66; }
+        footer {
+            margin-top: 100px;
+            padding: 25px;
+            text-align: center;
+            border-top: 1px solid var(--dourado-subtle);
+            font-size: 0.8rem;
+            color: var(--txt-secundario);
+        }
+        footer a { color: var(--txt-secundario); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Speak AI<span class="sup">⁺</span> <span style="font-size: 0.6em; color: var(--txt-secundario);">| Central ADM</span></h1>
+        </div>
+        <div class="subtitle">Liderar é transformar direção em resultado.</div>
+    </header>
+
+    <div class="main-content">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; color: var(--dourado);">Controle Operacional de Contas</h2>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudante</th>
+                        <th>E-mail</th>
+                        <th>Nível</th>
+                        <th>Status</th>
+                        <th>Renovação</th>
+                        <th>Aba Vinculada</th>
+                    </tr>
+                </thead>
+                <tbody id="listaAlunos">
+                    <!-- Linha Mock para alinhamento inicial visual -->
+                    <tr>
+                        <td>ALU001</td>
+                        <td>Veiga Sandálias (Laboratório)</td>
+                        <td>contato@veiga.com</td>
+                        <td>B1</td>
+                        <td><span class="badge ativo">Ativo</span></td>
+                        <td>24/12/2026</td>
+                        <td><code>SPEAK_ALU001</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+        <a href="@eumaisgestor">EU⁺ Gestor</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+    </footer>
+
+</body>
+</html>
