@@ -31,10 +31,9 @@
             min-height: 100vh;
         }
 
-        /* Atmosfera Moody e Chiaroscuro inspirada na imagem de referência */
         .hero-section {
             position: relative;
-            min-height: 85vh;
+            min-height: 90vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -45,7 +44,6 @@
                         linear-gradient(135deg, #060E18 0%, #02070d 100%);
         }
 
-        /* Feixe de luz dramático simulando a fotografia premium do manual */
         .hero-section::before {
             content: '';
             position: absolute;
@@ -89,10 +87,9 @@
             text-align: center;
             max-width: 650px;
             z-index: 2;
-            margin: 60px 0;
+            margin: 50px 0;
         }
 
-        /* Emblema Oficial EU+ (Três círculos concêntricos e linhas de cruzamento central) */
         .emblema-container {
             margin-bottom: 30px;
             display: flex;
@@ -108,7 +105,7 @@
         h1.product-title {
             font-family: 'DM Sans', sans-serif;
             font-weight: 400;
-            font-size: 3rem;
+            font-size: 3.2rem;
             margin: 0 0 15px 0;
             letter-spacing: -0.02em;
             color: var(--txt-principal);
@@ -129,33 +126,49 @@
             font-size: 1.6rem;
             color: var(--txt-principal);
             line-height: 1.4;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             letter-spacing: 0.01em;
+        }
+
+        /* Container do CTA com destaque de gatilho de entrada */
+        .cta-wrapper {
+            display: inline-block;
+            text-align: center;
         }
 
         .cta-button {
             display: inline-block;
-            background-color: transparent;
+            background: linear-gradient(135deg, rgba(196, 151, 74, 0.1) 0%, rgba(196, 151, 74, 0.25) 100%);
             border: 1px solid var(--dourado);
             color: var(--txt-principal);
-            padding: 16px 40px;
+            padding: 20px 50px;
             font-family: 'DM Sans', sans-serif;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.18em;
             text-decoration: none;
-            border-radius: 2px;
+            border-radius: 3px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .cta-button:hover {
-            background-color: var(--dourado);
+            background: var(--dourado);
             color: var(--bg-principal);
-            box-shadow: 0 10px 30px rgba(196, 151, 74, 0.15);
+            box-shadow: 0 15px 35px rgba(196, 151, 74, 0.25);
+            transform: translateY(-2px);
         }
 
-        /* Seção de Detalhes e Posicionamento Exclusivo */
+        .cta-subtext {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--txt-secundario);
+            letter-spacing: 0.08em;
+            margin-top: 12px;
+            text-transform: uppercase;
+        }
+
         .details-section {
             background-color: var(--bg-secundario);
             border-top: 1px solid var(--dourado-subtle);
@@ -196,7 +209,6 @@
             margin: 0;
         }
 
-        /* Seção de Contato Institucional */
         .contact-section {
             padding: 80px 20px;
             text-align: center;
@@ -211,26 +223,56 @@
             margin-bottom: 20px;
         }
 
-        .contact-links {
+        /* Alinhamento dos canais oficiais mapeados no manual com ícones integrados */
+        .social-channels-grid {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 30px;
+            justify-content: center;
+            gap: 25px;
+            margin: 35px 0 45px 0;
+            flex-wrap: wrap;
         }
 
-        .contact-item {
+        .channel-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-family: 'DM Sans', sans-serif;
-            font-size: 1.1rem;
+            font-size: 0.85rem;
+            color: var(--txt-secundario);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .channel-link:hover {
+            color: var(--dourado);
+            border-bottom: 1px solid var(--dourado);
+        }
+
+        .channel-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .direct-phone {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.4rem;
             color: var(--txt-principal);
             text-decoration: none;
+            letter-spacing: 0.02em;
             transition: color 0.3s;
+            display: inline-block;
+            margin-top: 10px;
         }
 
-        .contact-item:hover {
+        .direct-phone:hover {
             color: var(--dourado);
         }
 
-        /* Assinatura de Hierarquia Ascendente Obrigatória */
         footer {
             background-color: var(--bg-principal);
             padding: 30px 20px;
@@ -252,8 +294,9 @@
         }
 
         @media (max-width: 600px) {
-            h1.product-title { font-size: 2.2rem; }
+            h1.product-title { font-size: 2.4rem; }
             .headline { font-size: 1.3rem; }
+            .social-channels-grid { gap: 10px; }
         }
     </style>
 </head>
@@ -266,17 +309,13 @@
         </header>
 
         <div class="main-showcase">
-            <!-- Emblema Oficial do Grupo EU+ renderizado dinamicamente via SVG -->
             <div class="emblema-container">
                 <svg class="emblema-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Três círculos concêntricos -->
                     <circle cx="50" cy="50" r="45" fill="none" stroke="#C4974A" stroke-width="0.7" opacity="0.3"/>
                     <circle cx="50" cy="50" r="30" fill="none" stroke="#C4974A" stroke-width="0.7" opacity="0.5"/>
                     <circle cx="50" cy="50" r="15" fill="none" stroke="#C4974A" stroke-width="0.7" opacity="0.8"/>
-                    <!-- Linhas de cruzamento central -->
                     <line x1="50" y1="5" x2="50" y2="95" stroke="#C4974A" stroke-width="0.5" opacity="0.4"/>
                     <line x1="5" y1="50" x2="95" y2="50" stroke="#C4974A" stroke-width="0.5" opacity="0.4"/>
-                    <!-- Ponto central -->
                     <circle cx="50" cy="50" r="2.5" fill="#C4974A"/>
                 </svg>
             </div>
@@ -286,10 +325,13 @@
                 Transforme a sua fala em autoridade internacional. Um ecossistema de imersão sob medida para alta liderança.
             </div>
             
-            <a href="https://eumaisempresa.github.io/speakai/cadastro/" class="cta-button">Solicitar Ingresso</a>
+            <div class="cta-wrapper">
+                <a href="https://eumaisempresa.github.io/speakai/cadastro/" class="cta-button">Solicitar Ingresso</a>
+                <span class="cta-subtext">7 dias Premium grátis — sem cartão</span>
+            </div>
         </div>
 
-        <div></div> <!-- Espaçador para alinhamento vertical flexbox -->
+        <div></div>
     </section>
 
     <section class="details-section">
@@ -310,12 +352,35 @@
     </section>
 
     <section class="contact-section">
-        <h2>Atendimento Exclusivo</h2>
-        <p style="color: var(--txt-secundario); font-weight: 300; margin-bottom: 30px;">Para suporte institucional ou dúvidas corporativas sobre a plataforma de liderança:</p>
-        <div class="contact-links">
-            <a href="https://wa.me/5528998131806" class="contact-item" target="_blank">+55 (28) 99813-1806</a>
-            <a href="mailto:eumaisempresa@gmail.com" class="contact-item">eumaisempresa@gmail.com</a>
+        <h2>Canais Oficiais</h2>
+        <p style="color: var(--txt-secundario); font-weight: 300; margin-bottom: 10px;">Acesse a presença digital do ecossistema ou inicie o atendimento corporativo imediato:</p>
+        
+        <!-- Malha de Ícones e Links Oficiais com SVGs inline integrados -->
+        <div class="social-channels-grid">
+            <!-- Web/Portal -->
+            <a href="https://www.eumaisempresa.com.br" class="channel-link" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                Portal
+            </a>
+            <!-- LinkedIn -->
+            <a href="https://linkedin.com/company/eumaisempresa" class="channel-link" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                LinkedIn
+            </a>
+            <!-- Instagram Empresa -->
+            <a href="https://instagram.com/eumaisempresa" class="channel-link" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m12.4 2.25a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                @eumaisempresa
+            </a>
+            <!-- Instagram Executivo -->
+            <a href="https://instagram.com/eumaisexecutivo" class="channel-link" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m12.4 2.25a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                @eumaisexecutivo
+            </a>
         </div>
+
+        <a href="https://wa.me/5527998131806" class="direct-phone" target="_blank">+55 (27) 99813-1806</a>
+        <div style="margin-top: 15px;"><a href="mailto:eumaisempresa@gmail.com" style="color: var(--txt-secundario); text-decoration: none; font-size: 0.95rem;">eumaisempresa@gmail.com</a></div>
     </section>
 
     <footer>
