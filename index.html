@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speak AI⁺ — EU⁺ Executivo</title>
+    <!-- Fontes Oficiais do Grupo EU+ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-principal: #060E18;
+            --bg-secundario: #0A1624;
+            --bg-terciario: #0E1E30;
+            --dourado: #C4974A;
+            --dourado-subtle: rgba(196,151,74,0.18);
+            --txt-principal: #EEF0F2;
+            --txt-secundario: #7A8FA3;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Atmosfera Moody e Chiaroscuro inspirada na imagem de referência */
+        .hero-section {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at 85% 15%, rgba(196, 151, 74, 0.12) 0%, transparent 50%),
+                        linear-gradient(135deg, #060E18 0%, #02070d 100%);
+        }
+
+        /* Feixe de luz dramático simulando a fotografia premium do manual */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -10%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(115deg, transparent 20%, rgba(196, 151, 74, 0.08) 40%, rgba(196, 151, 74, 0.02) 60%, transparent 80%);
+            pointer-events: none;
+            transform: skewX(-15deg);
+        }
+
+        header .brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.02em;
+            color: var(--txt-principal);
+            text-align: center;
+        }
+
+        header .brand span.sup {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            color: var(--dourado);
+            font-size: 0.42em;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        header .sub-brand {
+            font-size: 0.75rem;
+            color: var(--dourado);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-top: 4px;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .main-showcase {
+            text-align: center;
+            max-width: 650px;
+            z-index: 2;
+            margin: 60px 0;
+        }
+
+        /* Emblema Oficial EU+ (Três círculos concêntricos e linhas de cruzamento central) */
+        .emblema-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            opacity: 0.85;
+        }
+
+        .emblema-svg {
+            width: 70px;
+            height: 70px;
+        }
+
+        h1.product-title {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 400;
+            font-size: 3rem;
+            margin: 0 0 15px 0;
+            letter-spacing: -0.02em;
+            color: var(--txt-principal);
+        }
+
+        h1.product-title span.sup {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            color: var(--dourado);
+            font-size: 0.42em;
+            vertical-align: super;
+        }
+
+        .headline {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 1.6rem;
+            color: var(--txt-principal);
+            line-height: 1.4;
+            margin-bottom: 40px;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: transparent;
+            border: 1px solid var(--dourado);
+            color: var(--txt-principal);
+            padding: 16px 40px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-decoration: none;
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cta-button:hover {
+            background-color: var(--dourado);
+            color: var(--bg-principal);
+            box-shadow: 0 10px 30px rgba(196, 151, 74, 0.15);
+        }
+
+        /* Seção de Detalhes e Posicionamento Exclusivo */
+        .details-section {
+            background-color: var(--bg-secundario);
+            border-top: 1px solid var(--dourado-subtle);
+            border-bottom: 1px solid var(--dourado-subtle);
+            padding: 80px 20px;
+        }
+
+        .grid-details {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .detail-card {
+            background-color: var(--bg-principal);
+            border: 1px solid var(--dourado-subtle);
+            padding: 40px;
+            border-radius: 4px;
+        }
+
+        .detail-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: var(--dourado);
+            margin: 0 0 15px 0;
+            letter-spacing: 0.02em;
+        }
+
+        .detail-card p {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            font-size: 0.95rem;
+            color: var(--txt-secundario);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Seção de Contato Institucional */
+        .contact-section {
+            padding: 80px 20px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.1rem;
+            color: var(--txt-principal);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-item:hover {
+            color: var(--dourado);
+        }
+
+        /* Assinatura de Hierarquia Ascendente Obrigatória */
+        footer {
+            background-color: var(--bg-principal);
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid var(--dourado-subtle);
+            font-size: 0.8rem;
+            color: var(--txt-secundario);
+            letter-spacing: 0.05em;
+        }
+
+        footer a {
+            color: var(--txt-secundario);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--dourado);
+        }
+
+        @media (max-width: 600px) {
+            h1.product-title { font-size: 2.2rem; }
+            .headline { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero-section">
+        <header>
+            <div class="brand">EU<span class="sup">⁺</span></div>
+            <div class="sub-brand">Executivo</div>
+        </header>
+
+        <div class="main-showcase">
+            <!-- Emblema Oficial do Grupo EU+ renderizado dinamicamente via SVG -->
+            <div class="emblema-container">
+                <svg class="emblema-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Três círculos concêntricos -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#C4974A" stroke-width="0.7" opacity="0.3"/>
+                    <circle cx="50" cy="50" r="30" fill="none" stroke="#C4974A" stroke-width="0.7" opacity="0.5"/>
+                    <circle cx="50" cy="50" r="15" fill="none" stroke="#C4974A" stroke-width="0.7" opacity="0.8"/>
+                    <!-- Linhas de cruzamento central -->
+                    <line x1="50" y1="5" x2="50" y2="95" stroke="#C4974A" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="5" y1="50" x2="95" y2="50" stroke="#C4974A" stroke-width="0.5" opacity="0.4"/>
+                    <!-- Ponto central -->
+                    <circle cx="50" cy="50" r="2.5" fill="#C4974A"/>
+                </svg>
+            </div>
+
+            <h1 class="product-title">Speak AI<span class="sup">⁺</span></h1>
+            <div class="headline">
+                Transforme a sua fala em autoridade internacional. Um ecossistema de imersão sob medida para alta liderança.
+            </div>
+            
+            <a href="https://eumaisempresa.github.io/speakai/cadastro/" class="cta-button">Solicitar Ingresso</a>
+        </div>
+
+        <div></div> <!-- Espaçador para alinhamento vertical flexbox -->
+    </section>
+
+    <section class="details-section">
+        <div class="grid-details">
+            <div class="detail-card">
+                <h3>Interação Invisível</h3>
+                <p>Esqueça os cronogramas escolares artificiais. Fale diretamente por voz e receba análises estruturais adaptadas ao seu ritmo de decisão.</p>
+            </div>
+            <div class="detail-card">
+                <h3>Shadow Tracker</h3>
+                <p>Seus desvios gramaticais e de sintaxe são catalogados silenciosamente em segundo plano, gerando um histórico exclusivo e mapeável de evolução.</p>
+            </div>
+            <div class="detail-card">
+                <h3>Privacidade de Dados</h3>
+                <p>Diferente de plataformas tradicionais, você detém a propriedade absoluta e o controle de todo o seu repositório de conhecimento no ecossistema.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <h2>Atendimento Exclusivo</h2>
+        <p style="color: var(--txt-secundario); font-weight: 300; margin-bottom: 30px;">Para suporte institucional ou dúvidas corporativas sobre a plataforma de liderança:</p>
+        <div class="contact-links">
+            <a href="https://wa.me/5528998131806" class="contact-item" target="_blank">+55 (28) 99813-1806</a>
+            <a href="mailto:eumaisempresa@gmail.com" class="contact-item">eumaisempresa@gmail.com</a>
+        </div>
+    </section>
+
+    <footer>
+        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+        <a href="https://instagram.com/eumaisexecutivo" target="_blank">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+    </footer>
+
+</body>
+</html>
