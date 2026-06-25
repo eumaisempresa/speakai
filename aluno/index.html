@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambiente de Performance | Speak AI⁺</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-principal: #060E18;
+            --bg-secundario: #0A1624;
+            --bg-terciario: #0E1E30;
+            --dourado: #C4974A;
+            --dourado-subtle: rgba(196,151,74,0.18);
+            --txt-principal: #EEF0F2;
+            --txt-secundario: #7A8FA3;
+        }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            border-bottom: 1px solid var(--dourado-subtle);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-secundario);
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        h1 span.sup {
+            font-weight: 600;
+            color: var(--dourado);
+            font-size: 0.42em;
+            vertical-align: super;
+        }
+        .chat-area {
+            flex: 1;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 30px;
+            padding-right: 10px;
+        }
+        .message {
+            margin-bottom: 24px;
+            max-width: 80%;
+            line-height: 1.5;
+            font-size: 1.05rem;
+        }
+        .message.user {
+            margin-left: auto;
+            color: var(--dourado);
+            text-align: right;
+            font-weight: 400;
+        }
+        .message.ai {
+            margin-right: auto;
+            color: var(--txt-principal);
+            background-color: var(--bg-secundario);
+            border: 1px solid var(--dourado-subtle);
+            padding: 15px 20px;
+            border-radius: 4px;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            background-color: var(--bg-secundario);
+            padding: 15px;
+            border: 1px solid var(--dourado-subtle);
+            border-radius: 4px;
+        }
+        input {
+            flex: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+        }
+        input:focus { outline: none; }
+        .btn-mic {
+            background: transparent;
+            border: 1px solid var(--dourado);
+            color: var(--dourado);
+            padding: 10px 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        .btn-mic.recording {
+            background-color: #c44a4a;
+            border-color: #c44a4a;
+            color: white;
+        }
+        footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid var(--dourado-subtle);
+            font-size: 0.8rem;
+            color: var(--txt-secundario);
+        }
+        footer a { color: var(--txt-secundario); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Speak AI<span class="sup">⁺</span></h1>
+        <div style="font-size: 0.85rem; color: var(--dourado);">Ambiente de Imersão Ativo</div>
+    </header>
+
+    <div class="chat-area">
+        <div class="messages" id="chatBox">
+            <div class="message ai">Welcome back to your elite training environment. Click "Falar" and express your thoughts out loud. I am listening.</div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="textInput" placeholder="Digite sua resposta ou use o microfone ao lado..." autocomplete="off">
+            <button class="btn-mic" id="micBtn">Falar (Voz)</button>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+        <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+    </footer>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const textInput = document.getElementById('textInput');
+        const micBtn = document.getElementById('micBtn');
+
+        // Configuração da Web Speech API nativa para captação de voz mãos-livres
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isRecording = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US'; // Escuta nativa em inglês
+            recognition.continuous = false;
+
+            recognition.onstart = () => {
+                micBtn.innerText = "Ouvindo...";
+                micBtn.classList.add('recording');
+            };
+
+            recognition.onresult = (event) => {
+                const speechToText = event.results[0][0].transcript;
+                textInput.value = speechToText;
+                enviarMensagem(speechToText, "Voz");
+            };
+
+            recognition.onend = () => {
+                micBtn.innerText = "Falar (Voz)";
+                micBtn.classList.remove('recording');
+                isRecording = false;
+            };
+        }
+
+        micBtn.addEventListener('click', () => {
+            if (!SpeechRecognition) {
+                alert("A API de voz não é suportada neste navegador. Use a entrada de texto.");
+                return;
+            }
+            if (!isRecording) {
+                recognition.start();
+                isRecording = true;
+            } else {
+                recognition.stop();
+            }
+        });
+
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && textInput.value.trim() !== "") {
+                enviarMensagem(textInput.value, "Texto");
+                textInput.value = "";
+            }
+        });
+
+        function enviarMensagem(texto, canal) {
+            // Renderiza na tela imediatamente
+            const userDiv = document.createElement('div');
+            userDiv.className = "message user";
+            userDiv.innerText = texto;
+            chatBox.appendChild(userDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Aqui você dispara o fetch assíncrono para o Apps Script
+            // Para manter a imersão fluida, a IA processa em segundo plano e grava nos blocos do Sheets
+        }
+    </script>
+</body>
+</html>
