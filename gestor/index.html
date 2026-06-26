@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Gestor | Speak AI⁺ — EU⁺ Executivo</title>
+    <title>Painel Gestor | Speak AI⁺ — EU⁺ Gestor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-principal: #060E18;
@@ -20,386 +20,289 @@
             --status-alerta: #FAAD14;
             --status-erro: #FF4D4F;
         }
-
         body {
             background-color: var(--bg-principal);
             color: var(--txt-principal);
             font-family: 'DM Sans', sans-serif;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
         }
-
         header {
+            background-color: var(--bg-secundario);
             border-bottom: 1px solid var(--dourado-subtle);
             padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: var(--bg-secundario);
         }
-
-        .brand {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
-            letter-spacing: 0.02em;
-        }
-
-        .brand span.sup {
-            color: var(--dourado);
-            font-size: 0.45em;
-            vertical-align: super;
-            font-weight: 600;
-        }
-
-        .painel-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .secao-titulo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            margin-bottom: 25px;
-            font-weight: 400;
-        }
-
-        .grid-gestao {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 900px) {
-            .grid-gestao { grid-template-columns: 1fr; }
-        }
-
-        .card-painel {
-            background-color: var(--bg-secundario);
+        h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; margin: 0; font-size: 1.8rem; }
+        h1 span.sup { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        .subtitle { font-size: 0.85rem; color: var(--txt-secundario); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .main-content { padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .table-container { background-color: var(--bg-secundario); border: 1px solid var(--dourado-subtle); border-radius: 4px; overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background-color: var(--bg-terciario); color: var(--txt-secundario); font-weight: 400; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 16px 20px; border-bottom: 1px solid var(--dourado-subtle); }
+        td { padding: 16px 20px; border-bottom: 1px solid rgba(122,143,163,0.1); font-size: 0.95rem; color: var(--txt-principal); white-space: nowrap; }
+        tr:hover { background-color: rgba(14,30,48,0.4); }
+        
+        select.plan-select {
+            background-color: var(--bg-principal);
             border: 1px solid var(--dourado-subtle);
-            border-radius: 4px;
-            padding: 30px;
-        }
-
-        /* Estilização da Tabela de Alunos */
-        .tabela-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th {
-            color: var(--txt-secundario);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--dourado-subtle);
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.95rem;
-        }
-
-        tr:hover td {
-            background-color: rgba(196,151,74,0.03);
+            color: var(--txt-principal);
+            padding: 6px 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 2px;
             cursor: pointer;
         }
+        select.plan-select:focus { border-color: var(--dourado); outline: none; }
 
-        /* Badges de Status do Plano */
-        .badge-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .status-ativo { background-color: rgba(82,196,26,0.15); color: var(--status-ok); }
-        .status-pendente { background-color: rgba(250,173,20,0.15); color: var(--status-alerta); }
-        .status-expirado { background-color: rgba(255,77,79,0.15); color: var(--status-erro); }
-
-        /* Formulário de Ações Lateral */
-        .campo-visual {
-            background-color: var(--bg-principal);
-            border: 1px solid var(--dourado-subtle);
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-            border-radius: 2px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--txt-secundario);
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            letter-spacing: 0.05em;
-        }
-
-        select {
-            width: 100%;
-            background-color: var(--bg-principal);
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
             border: 1px solid var(--dourado);
-            padding: 12px;
-            color: var(--txt-principal);
-            border-radius: 2px;
-            font-family: 'DM Sans', sans-serif;
-            margin-bottom: 20px;
-        }
-
-        .btn-acao {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            text-align: center;
-            text-transform: uppercase;
+            color: var(--dourado);
+            padding: 6px 12px;
             font-size: 0.8rem;
-            font-weight: 500;
+            text-transform: uppercase;
             letter-spacing: 0.05em;
             text-decoration: none;
             border-radius: 2px;
-            box-sizing: border-box;
-            margin-bottom: 12px;
+            font-weight: 500;
+            transition: all 0.3s;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
-
-        .btn-wa { border: 1px solid var(--dourado); color: var(--txt-principal); background: transparent; }
         .btn-wa:hover { background-color: var(--dourado); color: var(--bg-principal); }
-        
-        .btn-excluir { border: 1px solid var(--status-erro); color: var(--status-erro); background: transparent; }
-        .btn-excluir:hover { background-color: var(--status-erro); color: var(--txt-principal); }
 
-        .loading {
-            text-align: center;
-            color: var(--txt-secundario);
-            padding: 40px;
-            font-style: italic;
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
+            border: 1px solid var(--status-erro);
+            color: var(--status-erro);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            border-radius: 2px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-left: 8px;
         }
+        .btn-delete:hover { background-color: var(--status-erro); color: #fff; }
+        
+        /* Estilos do Status Financeiro */
+        .badge-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .status-pago { background-color: rgba(82,148,26,0.15); color: var(--status-ok); }
+        .status-pendente { background-color: rgba(250,173,20,0.15); color: var(--status-alerta); }
+        .status-expirado { background-color: rgba(255,77,79,0.15); color: var(--status-erro); }
+
+        code { background-color: var(--bg-terciario); padding: 4px 8px; border-radius: 2px; color: #e4be7d; font-family: monospace; }
+        footer { margin-top: 60px; padding: 25px; text-align: center; border-top: 1px solid var(--dourado-subtle); font-size: 0.8rem; color: var(--txt-secundario); }
+        footer a { color: var(--txt-secundario); text-decoration: none; }
+        
+        .loading-text { text-align: center; padding: 30px; font-style: italic; color: var(--txt-secundario); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">Speak AI<span class="sup">⁺</span> — Gestão Executiva</div>
-        <div style="font-size: 0.85rem; color: var(--txt-secundario);">Painel do Administrador</div>
+        <div>
+            <h1>Speak AI<span class="sup">⁺</span> <span style="font-size: 0.6em; color: var(--txt-secundario);">| Central ADM</span></h1>
+        </div>
+        <div class="subtitle">Liderar é transformar direção em resultado.</div>
     </header>
 
-    <div class="painel-container">
-        <div class="secao-titulo">Mapeamento de Alunos Ativos</div>
-
-        <div class="grid-gestao">
-            <!-- Esquerda: Lista de Alunos -->
-            <div class="card-painel">
-                <div class="tabela-wrapper">
-                    <table id="tabelaAlunos">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>E-mail</th>
-                                <th>Plano Atual</th>
-                                <th>Status Financeiro</th>
-                            </tr>
-                        </thead>
-                        <tbody id="corpoTabela">
-                            <tr>
-                                <td colspan="4" class="loading">Buscando base de alunos integrada na planilha...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Direita: Área de Edição e Ações Rápidas -->
-            <div class="card-painel" id="cardAcoes" style="opacity: 0.4; pointer-events: none;">
-                <h3 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; margin-top:0; font-size:1.5rem; color: var(--dourado);">Perfil Selecionado</h3>
-                
-                <div>
-                    <label>Nome do Aluno</label>
-                    <div id="visualNome" class="campo-visual">-</div>
-                    
-                    <label>WhatsApp</label>
-                    <div id="visualWhatsapp" class="campo-visual">-</div>
-                </div>
-
-                <hr style="border: 0; border-top: 1px solid var(--dourado-subtle); margin: 20px 0;">
-
-                <div>
-                    <label>Alterar Plano Dinamicamente</label>
-                    <select id="selectPlanoAltera" onchange="atualizarPlanoPlanilha()">
-                        <option value="Premium Trial">Premium Trial (7 Dias)</option>
-                        <option value="Premium Anual">Premium Anual</option>
-                        <option value="Exclusive Enterprise">Exclusive Enterprise</option>
-                    </select>
-
-                    <label>Campanhas de Expansão & Upgrade</label>
-                    <button class="btn-acao btn-wa" onclick="enviarMensagemUpgrade()">Enviar Mensagem de Upgrade Personalizada</button>
-                    
-                    <button class="btn-acao btn-excluir" onclick="removerAlunoDoSistema()">Excluir Conta do Aluno Permanentemente</button>
-                </div>
-            </div>
+    <div class="main-content">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; color: var(--dourado);">Gestão de Licenças e Planos</h2>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudante</th>
+                        <th>WhatsApp</th>
+                        <th>Nível</th>
+                        <th>Senha Corporativa</th>
+                        <th>Gerenciar Plano</th>
+                        <th>Status Financeiro</th>
+                        <th>Aba Destino</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaCorpo">
+                    <tr>
+                        <td colspan="9" class="loading-text">Buscando informações em tempo real na planilha...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <script>
-        // URL da sua API do Google Apps Script
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
-        
-        let listaAlunosCache = [];
-        let alunoSelecionado = null;
+    <footer>
+        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+        <a href="@eumaisgestor">EU⁺ Gestor</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+    </footer>
 
-        // Carregar dados iniciais da planilha
-        async function carregarAlunos() {
+    <script>
+        // Defina a URL exata da sua API gerada no Google Apps Script (Web App)
+        const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
+
+        // Busca inicial de dados reais ao carregar a página
+        window.addEventListener('DOMContentLoaded', buscarDadosPlanilha);
+
+        async function buscarDadosPlanilha() {
             try {
-                const response = await fetch(`${WEB_APP_URL}?acao=listar_alunos`);
-                const dados = await response.json();
+                const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos`);
+                const resultado = await resposta.json();
                 
-                if(dados.status === "sucesso") {
-                    listaAlunosCache = dados.alunos;
-                    renderizarTabela(dados.alunos);
+                if (resultado.status === "sucesso") {
+                    renderizarTabela(resultado.alunos);
                 } else {
-                    document.getElementById('corpoTabela').innerHTML = `<tr><td colspan="4" class="loading">Nenhum aluno encontrado ou erro na planilha.</td></tr>`;
+                    exibirErroTabela("Erro ao retornar os dados da planilha.");
                 }
-            } catch (error) {
-                // Mock de contingência para teste visual se o Apps Script estiver offline temporariamente
-                const mockAlunos = [
-                    {nome: "Rodrigo Alvarenga", email: "rodrigo@exemplo.com", whatsapp: "27999998888", plano: "Premium Trial", status_pagamento: "Em dia"},
-                    {nome: "Juliana Mendes", email: "juliana@corporativo.com", whatsapp: "27988887777", plano: "Premium Anual", status_pagamento: "Pendente"},
-                    {nome: "Roberto Carlos", email: "roberto@lider.com", whatsapp: "27977776666", plano: "Exclusive Enterprise", status_pagamento: "Expirado"}
-                ];
-                listaAlunosCache = mockAlunos;
-                renderizarTabela(mockAlunos);
+            } catch (erro) {
+                exibirErroTabela("Falha ao se conectar com a planilha. Verifique a URL do Script.");
             }
         }
 
         function renderizarTabela(alunos) {
-            const corpo = document.getElementById('corpoTabela');
+            const corpo = document.getElementById('tabelaCorpo');
             corpo.innerHTML = "";
 
-            alunos.forEach((aluno, index) => {
-                let classeStatus = "status-ativo";
-                // Tratamento dinâmico do status financeiro trazido da planilha
-                if(aluno.status_pagamento === "Pendente") classeStatus = "status-pendente";
-                if(aluno.status_pagamento === "Expirado") classeStatus = "status-expirado";
+            if (alunos.length === 0) {
+                corpo.innerHTML = `<tr><td colspan="9" class="loading-text">Nenhum aluno registrado encontrado.</td></tr>`;
+                return;
+            }
 
+            alunos.forEach(aluno => {
                 const tr = document.createElement('tr');
-                tr.onclick = () => selecionarAluno(index);
+                
+                // Mapeamento dinâmico de classe de status
+                let classeStatus = "status-pago";
+                let statusTexto = aluno.status_pagamento || "Em dia";
+                if (statusTexto.toLowerCase() === "pendente") classeStatus = "status-pendente";
+                if (statusTexto.toLowerCase() === "expirado" || statusTexto.toLowerCase() === "atrasado") classeStatus = "status-expirado";
+
+                // Montagem da mensagem personalizada de Upgrade condicional
+                const msgUpgrade = obterMensagemUpgradePersonalizada(aluno.nome, aluno.plano);
+                const urlWhatsApp = `https://wa.me/55${aluno.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(msgUpgrade)}`;
+
                 tr.innerHTML = `
-                    <td><strong>${aluno.nome}</strong></td>
-                    <td style="color: var(--txt-secundario);">${aluno.email}</td>
-                    <td>${aluno.plano}</td>
-                    <td><span class="badge-status ${classeStatus}">${aluno.status_pagamento || 'Em dia'}</span></td>
+                    <td>${aluno.id || 'N/A'}</td>
+                    <td><strong>${aluno.nome}</strong><br><span style="font-size:0.8rem; color:var(--txt-secundario);">${aluno.email}</span></td>
+                    <td>${aluno.whatsapp}</td>
+                    <td>${aluno.nivel || 'A1'}</td>
+                    <td><code>${aluno.senha || '---'}</code></td>
+                    <td>
+                        <select class="plan-select" onchange="atualizarPlanoNoSheets('${aluno.email}', this.value, this)">
+                            <option value="Premium Trial" ${aluno.plano === "Premium Trial" ? "selected" : ""}>Premium Trial (7d)</option>
+                            <option value="Free" ${aluno.plano === "Free" ? "selected" : ""}>Free</option>
+                            <option value="Básico" ${aluno.plano === "Básico" ? "selected" : ""}>Básico</option>
+                            <option value="Premium" ${aluno.plano === "Premium" ? "selected" : ""}>Premium</option>
+                            <option value="Exclusive Enterprise" ${aluno.plano === "Exclusive Enterprise" ? "selected" : ""}>Exclusive Enterprise</option>
+                        </select>
+                    </td>
+                    <td><span class="badge-status ${classeStatus}">${statusTexto}</span></td>
+                    <td><code>${aluno.aba_destino || '---'}</code></td>
+                    <td>
+                        <a href="${urlWhatsApp}" target="_blank" class="btn-wa">Upgrade</a>
+                        <button class="btn-delete" onclick="deletarAlunoNoSheets('${aluno.email}', this)">Excluir</button>
+                    </td>
                 `;
                 corpo.appendChild(tr);
             });
         }
 
-        function selecionarAluno(index) {
-            alunoSelecionado = listaAlunosCache[index];
-            
-            // Libera o painel de edição lateral
-            const card = document.getElementById('cardAcoes');
-            card.style.opacity = "1";
-            card.style.pointerEvents = "auto";
-
-            // Injeta dados no formulário
-            document.getElementById('visualNome').innerText = alunoSelecionado.nome;
-            document.getElementById('visualWhatsapp').innerText = alunoSelecionado.whatsapp;
-            document.getElementById('selectPlanoAltera').value = alunoSelecionado.plano;
-        }
-
-        // CORREÇÃO 2: Alteração de plano síncrona enviando os dados corretos à Planilha
-        async function atualizarPlanoPlanilha() {
-            if(!alunoSelecionado) return;
-            const novoPlano = document.getElementById('selectPlanoAltera').value;
-            
-            const payload = {
-                acao: "editar_plano",
-                email: alunoSelecionado.email,
-                novo_plano: novoPlano
-            };
-
-            document.getElementById('selectPlanoAltera').disabled = true;
-
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify(payload)
-                });
-                const res = await response.json();
-                if(res.status === "sucesso") {
-                    alert("Plano modificado com sucesso na Planilha!");
-                    carregarAlunos(); // Atualiza a lista automaticamente na tela
-                }
-            } catch (e) {
-                alert("Plano simulado e atualizado localmente!");
-                alunoSelecionado.plano = novoPlano;
-                renderizarTabela(listaAlunosCache);
-            }
-            document.getElementById('selectPlanoAltera').disabled = false;
-        }
-
-        // CORREÇÃO 1: Remoção completa e recarregamento da tabela imediato
-        async function removerAlunoDoSistema() {
-            if(!alunoSelecionado) return;
-            if(!confirm(`Tem certeza que deseja excluir permanentemente ${alunoSelecionado.nome}?`)) return;
-
-            const payload = {
-                acao: "excluir_aluno",
-                email: alunoSelecionado.email
-            };
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify(payload)
-                });
-            } catch(e) {}
-
-            // Remove localmente do array para dar resposta visual imediata enquanto recarrega
-            listaAlunosCache = listaAlunosCache.filter(a => a.email !== alunoSelecionado.email);
-            renderizarTabela(listaAlunosCache);
-            
-            // Reseta o card lateral
-            document.getElementById('cardAcoes').style.opacity = "0.4";
-            document.getElementById('cardAcoes').style.pointerEvents = "none";
-            alert("Aluno removido e tabela sincronizada.");
-            carregarAlunos(); // Força busca limpa do servidor
-        }
-
-        // CORREÇÃO 3: Mensagens de Upgrade personalizadas dependendo do plano atual
-        function enviarMensagemUpgrade() {
-            if(!alunoSelecionado) return;
-
-            let mensagem = "";
-            const planoAtual = alunoSelecionado.plano;
-
-            if(planoAtual === "Premium Trial") {
-                mensagem = `Olá, *${alunoSelecionado.nome}*.\n\nIdentificamos que o seu período de teste de 7 dias do *Speak AI⁺* está ativo. Para não interromper o mapeamento de sua sintaxe e manter o seu repositório de privacidade corporativo ativo, recomendamos a transição para o plano *Premium Anual*.\n\nVamos consolidar seu ingresso definitivo no ecossistema?`;
-            } else if(planoAtual === "Premium Anual") {
-                mensagem = `Olá, Conselheiro *${alunoSelecionado.nome}*.\n\nSeu plano *Premium Anual* já elevou sua fluência ao nível técnico corporativo. O próximo passo do Grupo EU⁺ para sua carreira é o *Exclusive Enterprise* — incluindo sessões individuais estratégicas de simulação de conselhos internacionais de administração com IA.\n\nPodemos migrar sua conta para a categoria Exclusive?`;
+        // CORREÇÃO 3: Gerador dinâmico de mensagens dependendo de qual plano ele está
+        function obterMensagemUpgradePersonalizada(nome, planoAtual) {
+            if (planoAtual === "Premium Trial") {
+                return `Olá ${nome}, notamos que seu período Premium Trial de 7 dias no Speak AI⁺ está ativo e performando muito bem! Que tal fazer o upgrade para o Plano Premium Anual hoje e garantir acesso contínuo e ilimitado à sua banca de erros do Shadow Tracker?`;
+            } else if (planoAtual === "Free" || planoAtual === "Básico") {
+                return `Olá ${nome}! Vimos que você está utilizando o plano ${planoAtual} no Speak AI⁺. Para acelerar seus resultados rumo à liderança internacional, liberamos uma condição para você migrar para o Plano Premium. Vamos ativar?`;
+            } else if (planoAtual === "Premium") {
+                return `Olá Conselheiro ${nome}, sua jornada no plano Premium do Speak AI⁺ tem sido fantástica. O próximo passo estratégico para sua carreira é o Exclusive Enterprise, com simulação customizada de conselhos de administração e suporte focado de IA. Podemos agendar uma demonstração?`;
             } else {
-                mensagem = `Olá, *${alunoSelecionado.nome}*.\n\nSua assinatura no plano *${planoAtual}* está ativa. Temos novidades exclusivas de imersão corporativa customizadas para o seu perfil no Grupo EU⁺. Vamos agendar um alinhamento esta semana?`;
+                return `Olá ${nome}, tudo bem? Temos novidades e módulos de expansão exclusivos para o seu plano no Speak AI⁺. Vamos conversar?`;
             }
-
-            const urlWa = `https://wa.me/55${alunoSelecionado.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(mensagem)}`;
-            window.open(urlWa, '_blank');
         }
 
-        // Executa ao abrir a página
-        window.onload = carregarAlunos;
+        // CORREÇÃO 2: Alteração de plano real enviada via POST para a planilha
+        async function atualizarPlanoNoSheets(emailAluno, novoPlano, selectElement) {
+            selectElement.disabled = true;
+            try {
+                const resposta = await fetch(URL_GOOGLE_SCRIPT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        acao: "editar_plano",
+                        email: emailAluno,
+                        novo_plano: novoPlano
+                    })
+                });
+                const resultado = await resposta.json();
+                if (resultado.status === "sucesso") {
+                    alert("Plano atualizado com sucesso na planilha!");
+                    buscarDadosPlanilha(); // Recarrega para redesenhar a tabela e recalcular mensagens de upgrade
+                } else {
+                    alert("Erro ao atualizar o plano. Tente novamente.");
+                    selectElement.disabled = false;
+                }
+            } catch (erro) {
+                alert("Erro de comunicação com o servidor.");
+                selectElement.disabled = false;
+            }
+        }
+
+        // CORREÇÃO 1: Remoção de linha real na planilha e recarregamento instantâneo
+        async function deletarAlunoNoSheets(emailAluno, botaoElement) {
+            if (!confirm(`Confirma a exclusão definitiva do aluno vinculado ao e-mail ${emailAluno}?`)) return;
+            
+            botaoElement.disabled = true;
+            botaoElement.innerText = "...";
+
+            try {
+                const resposta = await fetch(URL_GOOGLE_SCRIPT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        acao: "excluir_aluno",
+                        email: emailAluno
+                    })
+                });
+                const resultado = await resposta.json();
+                if (resultado.status === "sucesso") {
+                    alert("Aluno excluído da planilha com sucesso!");
+                    buscarDadosPlanilha(); // Atualiza em tempo real sem deixar resíduos visuais
+                } else {
+                    alert("Não foi possível excluir o aluno.");
+                    botaoElement.disabled = false;
+                    botaoElement.innerText = "Excluir";
+                }
+            } catch (erro) {
+                alert("Erro de rede ao tentar deletar.");
+                botaoElement.disabled = false;
+                botaoElement.innerText = "Excluir";
+            }
+        }
+
+        function exibirErroTabela(mensagem) {
+            document.getElementById('tabelaCorpo').innerHTML = `<tr><td colspan="9" class="loading-text" style="color: var(--status-erro);">${mensagem}</td></tr>`;
+        }
     </script>
 </body>
 </html>
