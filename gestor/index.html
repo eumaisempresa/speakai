@@ -95,7 +95,6 @@
         }
         .btn-delete:hover { background-color: var(--status-erro); color: #fff; }
         
-        /* Estilos do Status Financeiro */
         .badge-status {
             display: inline-block;
             padding: 4px 8px;
@@ -165,9 +164,13 @@
         // Busca inicial de dados reais ao carregar a página
         window.addEventListener('DOMContentLoaded', buscarDadosPlanilha);
 
+        // CORREÇÃO: Inclusão do redirect follow obrigatório do Google
         async function buscarDadosPlanilha() {
             try {
-                const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos`);
+                const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos`, {
+                    method: "GET",
+                    redirect: "follow"
+                });
                 const resultado = await resposta.json();
                 
                 if (resultado.status === "sucesso") {
@@ -176,6 +179,7 @@
                     exibirErroTabela("Erro ao retornar os dados da planilha.");
                 }
             } catch (erro) {
+                console.error(erro);
                 exibirErroTabela("Falha ao se conectar com a planilha. Verifique a URL do Script.");
             }
         }
@@ -184,7 +188,7 @@
             const corpo = document.getElementById('tabelaCorpo');
             corpo.innerHTML = "";
 
-            if (alunos.length === 0) {
+            if (!alunos || alunos.length === 0) {
                 corpo.innerHTML = `<tr><td colspan="9" class="loading-text">Nenhum aluno registrado encontrado.</td></tr>`;
                 return;
             }
@@ -192,13 +196,11 @@
             alunos.forEach(aluno => {
                 const tr = document.createElement('tr');
                 
-                // Mapeamento dinâmico de classe de status
                 let classeStatus = "status-pago";
                 let statusTexto = aluno.status_pagamento || "Em dia";
                 if (statusTexto.toLowerCase() === "pendente") classeStatus = "status-pendente";
                 if (statusTexto.toLowerCase() === "expirado" || statusTexto.toLowerCase() === "atrasado") classeStatus = "status-expirado";
 
-                // Montagem da mensagem personalizada de Upgrade condicional
                 const msgUpgrade = obterMensagemUpgradePersonalizada(aluno.nome, aluno.plano);
                 const urlWhatsApp = `https://wa.me/55${aluno.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(msgUpgrade)}`;
 
@@ -228,26 +230,25 @@
             });
         }
 
-        // CORREÇÃO 3: Gerador dinâmico de mensagens dependendo de qual plano ele está
         function obterMensagemUpgradePersonalizada(nome, planoAtual) {
             if (planoAtual === "Premium Trial") {
                 return `Olá ${nome}, notamos que seu período Premium Trial de 7 dias no Speak AI⁺ está ativo e performando muito bem! Que tal fazer o upgrade para o Plano Premium Anual hoje e garantir acesso contínuo e ilimitado à sua banca de erros do Shadow Tracker?`;
             } else if (planoAtual === "Free" || planoAtual === "Básico") {
                 return `Olá ${nome}! Vimos que você está utilizando o plano ${planoAtual} no Speak AI⁺. Para acelerar seus resultados rumo à liderança internacional, liberamos uma condição para você migrar para o Plano Premium. Vamos ativar?`;
             } else if (planoAtual === "Premium") {
-                return `Olá Conselheiro ${nome}, sua jornada no plano Premium do Speak AI⁺ tem sido fantástica. O próximo passo estratégico para sua carreira é o Exclusive Enterprise, com simulação customizada de conselhos de administração e suporte focado de IA. Podemos agendar uma demonstração?`;
+                return `Olá Conselheiro ${nome}, sua jornada no plano Premium do Speak AI⁺ tempo sido fantástica. O próximo passo estratégico para sua carreira é o Exclusive Enterprise, com simulação customizada de conselhos de administração e suporte focado de IA. Podemos agendar uma demonstração?`;
             } else {
                 return `Olá ${nome}, tudo bem? Temos novidades e módulos de expansão exclusivos para o seu plano no Speak AI⁺. Vamos conversar?`;
             }
         }
 
-        // CORREÇÃO 2: Alteração de plano real enviada via POST para a planilha
         async function atualizarPlanoNoSheets(emailAluno, novoPlano, selectElement) {
             selectElement.disabled = true;
             try {
                 const resposta = await fetch(URL_GOOGLE_SCRIPT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain' },
+                    redirect: 'follow',
                     body: JSON.stringify({
                         acao: "editar_plano",
                         email: emailAluno,
@@ -257,7 +258,7 @@
                 const resultado = await resposta.json();
                 if (resultado.status === "sucesso") {
                     alert("Plano atualizado com sucesso na planilha!");
-                    buscarDadosPlanilha(); // Recarrega para redesenhar a tabela e recalcular mensagens de upgrade
+                    buscarDadosPlanilha();
                 } else {
                     alert("Erro ao atualizar o plano. Tente novamente.");
                     selectElement.disabled = false;
@@ -268,7 +269,6 @@
             }
         }
 
-        // CORREÇÃO 1: Remoção de linha real na planilha e recarregamento instantâneo
         async function deletarAlunoNoSheets(emailAluno, botaoElement) {
             if (!confirm(`Confirma a exclusão definitiva do aluno vinculado ao e-mail ${emailAluno}?`)) return;
             
@@ -279,6 +279,7 @@
                 const resposta = await fetch(URL_GOOGLE_SCRIPT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain' },
+                    redirect: 'follow',
                     body: JSON.stringify({
                         acao: "excluir_aluno",
                         email: emailAluno
@@ -287,7 +288,7 @@
                 const resultado = await resposta.json();
                 if (resultado.status === "sucesso") {
                     alert("Aluno excluído da planilha com sucesso!");
-                    buscarDadosPlanilha(); // Atualiza em tempo real sem deixar resíduos visuais
+                    buscarDadosPlanilha();
                 } else {
                     alert("Não foi possível excluir o aluno.");
                     botaoElement.disabled = false;
