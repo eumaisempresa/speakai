@@ -158,10 +158,8 @@
     </footer>
 
     <script>
-        // URL da API gerada no Google Apps Script
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
 
-        // Busca inicial de dados reais ao carregar a página
         window.addEventListener('DOMContentLoaded', buscarDadosPlanilha);
 
         async function buscarDadosPlanilha() {
@@ -192,29 +190,52 @@
                 return;
             }
 
+            // Exibe a estrutura real recebida para fins de diagnóstico no Console (F12)
+            console.log("Dados brutos recebidos do Apps Script:", alunos);
+
             alunos.forEach(aluno => {
                 const tr = document.createElement('tr');
                 
-                // Mapeamento dos campos baseado exatamente nos cabeçalhos da sua planilha
-                const id = aluno.ID_Aluno || 'N/A';
-                const nome = aluno.Nome_Estudante || 'Sem Nome';
-                const email = aluno.Email || '';
-                const whatsappOriginal = aluno.WhatsApp ? String(aluno.WhatsApp) : '';
-                const nivel = aluno.Nivel_Atual || 'A1';
-                const senha = aluno.Senha || '---';
-                const plano = aluno.Plano || 'Premium Trial';
-                const statusTexto = aluno.Status_Assinatura || "Em dia";
-                const abaDestino = aluno.Nome_Aba_Estudante || '---';
-                
-                // Tratamento e renderização do badge financeiro baseado em Status_Assinatura
-                let classeStatus = "status-pago";
-                if (statusTexto.toLowerCase() === "pendente") classeStatus = "status-pendente";
-                if (statusTexto.toLowerCase() === "expirado" || statusTexto.toLowerCase() === "atrasado") classeStatus = "status-expirado";
+                let id, nome, email, whatsappOriginal, nivel, senha, plano, statusTexto, abaDestino;
 
-                // Geração da mensagem de upgrade personalizada condicional
+                // TRATAMENTO VARIÁVEL: Se os dados vierem em Array (Matriz de linhas)
+                if (Array.isArray(aluno)) {
+                    id = aluno[0] || 'N/A';
+                    nome = aluno[2] || 'Sem Nome';
+                    email = aluno[3] || '';
+                    whatsappOriginal = aluno[4] ? String(aluno[4]) : '';
+                    nivel = aluno[5] || 'A1';
+                    plano = aluno[6] || 'Premium Trial';
+                    statusTexto = aluno[7] || 'Em dia';
+                    abaDestino = aluno[9] || '---';
+                    senha = aluno[11] || '---';
+                } 
+                // TRATAMENTO VARIÁVEL: Se os dados vierem em Objeto estruturado
+                else {
+                    id = aluno.ID_Aluno || aluno.id_aluno || aluno.id || 'N/A';
+                    nome = aluno.Nome_Estudante || aluno.nome_estudante || aluno.nome || 'Sem Nome';
+                    email = aluno.Email || aluno.email || '';
+                    whatsappOriginal = aluno.WhatsApp || aluno.whatsapp || '';
+                    whatsappOriginal = whatsappOriginal ? String(whatsappOriginal) : '';
+                    nivel = aluno.Nivel_Atual || aluno.nivel_atual || aluno.nivel || 'A1';
+                    senha = aluno.Senha || aluno.senha || '---';
+                    plano = aluno.Plano || aluno.plano || 'Premium Trial';
+                    statusTexto = aluno.Status_Assinatura || aluno.status_assinatura || aluno.status || "Em dia";
+                    abaDestino = aluno.Nome_Aba_Estudante || aluno.nome_aba_estudante || aluno.aba_destino || '---';
+                }
+                
+                // Normalização visual dos badges financeiros de status
+                let classeStatus = "status-pago";
+                const statusNormalizado = statusTexto.toLowerCase().trim();
+                if (statusNormalizado.includes("pendente")) {
+                    classeStatus = "status-pendente";
+                } else if (statusNormalizado.includes("expirado") || statusNormalizado.includes("atrasado")) {
+                    classeStatus = "status-expirado";
+                }
+
                 const msgUpgrade = obterMensagemUpgradePersonalizada(nome, plano);
                 
-                // Sanitização estrita para evitar duplicação do prefixo 55
+                // Sanitização do número de telefone celular para links do WhatsApp
                 let numeroLimpo = whatsappOriginal.replace(/\D/g, '');
                 if (numeroLimpo && !numeroLimpo.startsWith('55') && numeroLimpo.length >= 10) {
                     numeroLimpo = '55' + numeroLimpo;
@@ -224,7 +245,7 @@
                 tr.innerHTML = `
                     <td>${id}</td>
                     <td><strong>${nome}</strong><br><span style="font-size:0.8rem; color:var(--txt-secundario);">${email}</span></td>
-                    <td>${whatsappOriginal}</td>
+                    <td>${whatsappOriginal || '---'}</td>
                     <td>${nivel}</td>
                     <td><code>${senha}</code></td>
                     <td>
@@ -251,7 +272,7 @@
             if (planoAtual === "Premium Trial") {
                 return `Olá ${nome}, notamos que seu período Premium Trial de 7 dias no Speak AI⁺ está ativo e performando muito bem! Que tal fazer o upgrade para o Plano Premium Anual hoje e garantir acesso contínuo e ilimitado à sua banca de erros do Shadow Tracker?`;
             } else if (planoAtual === "Free" || planoAtual === "Básico") {
-                return `Olá ${nome}! Vimos que você está utilizando o plano ${planoAtual} no Speak AI⁺. Para acelerar seus resultados rumo à liderança internacional, liberamos uma condition para você migrar para o Plano Premium. Vamos ativar?`;
+                return `Olá ${nome}! Vimos que você está utilizando o plano ${planoAtual} no Speak AI⁺. Para acelerar seus resultados rumo à liderança internacional, liberamos uma condição para você migrar para o Plano Premium. Vamos ativar?`;
             } else if (planoAtual === "Premium") {
                 return `Olá Conselheiro ${nome}, sua jornada no plano Premium do Speak AI⁺ tem sido fantástica. O próximo passo estratégico para sua carreira é o Exclusive Enterprise, com simulação customizada de conselhos de administração e suporte focado de IA. Podemos agendar uma demonstração?`;
             } else {
@@ -288,6 +309,10 @@
         }
 
         async function deletarAlunoNoSheets(emailAluno, botaoElement) {
+            if (!emailAluno) {
+                alert("E-mail inválido para exclusão.");
+                return;
+            }
             if (!confirm(`Confirma a exclusão definitiva do aluno vinculado ao e-mail ${emailAluno}?`)) return;
             
             botaoElement.disabled = true;
