@@ -32,76 +32,49 @@
             justify-content: space-between;
             align-items: center;
         }
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 400;
-            margin: 0;
-            font-size: 1.8rem;
-        }
-        h1 span.sup {
-            font-weight: 600;
-            color: var(--dourado);
-            font-size: 0.42em;
-            vertical-align: super;
-        }
-        .subtitle {
-            font-size: 0.85rem;
-            color: var(--txt-secundario);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .main-content {
-            padding: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .table-container {
-            background-color: var(--bg-secundario);
+        h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; margin: 0; font-size: 1.8rem; }
+        h1 span.sup { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        .subtitle { font-size: 0.85rem; color: var(--txt-secundario); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .main-content { padding: 40px; max-width: 1300px; margin: 0 auto; }
+        .table-container { background-color: var(--bg-secundario); border: 1px solid var(--dourado-subtle); border-radius: 4px; overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background-color: var(--bg-terciario); color: var(--txt-secundario); font-weight: 400; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 16px 20px; border-bottom: 1px solid var(--dourado-subtle); }
+        td { padding: 16px 20px; border-bottom: 1px solid rgba(122,143,163,0.1); font-size: 0.95rem; color: var(--txt-principal); white-space: nowrap; }
+        tr:hover { background-color: rgba(14,30,48,0.4); }
+        
+        /* Dropdowns elegantes de planos integrados na tabela */
+        select.plan-select {
+            background-color: var(--bg-principal);
             border: 1px solid var(--dourado-subtle);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 20px;
+            color: var(--txt-principal);
+            padding: 6px 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 2px;
+            cursor: pointer;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        th {
-            background-color: var(--bg-terciario);
-            color: var(--txt-secundario);
-            font-weight: 400;
+        select.plan-select:focus { border-color: var(--dourado); outline: none; }
+
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
+            border: 1px solid var(--dourado);
+            color: var(--dourado);
+            padding: 6px 12px;
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--dourado-subtle);
-        }
-        td {
-            padding: 16px 20px;
-            border-bottom: 1px solid rgba(122,143,163,0.1);
-            font-size: 0.95rem;
-            color: var(--txt-principal);
-        }
-        tr:hover {
-            background-color: rgba(14,30,48,0.4);
-        }
-        .badge {
-            padding: 4px 8px;
+            text-decoration: none;
             border-radius: 2px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
             font-weight: 500;
+            transition: all 0.3s;
         }
-        .badge.ativo { background-color: rgba(122,173,102,0.15); color: #7AAD66; }
-        footer {
-            margin-top: 100px;
-            padding: 25px;
-            text-align: center;
-            border-top: 1px solid var(--dourado-subtle);
-            font-size: 0.8rem;
-            color: var(--txt-secundario);
-        }
+        .btn-wa:hover { background-color: var(--dourado); color: var(--bg-principal); }
+        
+        code { background-color: var(--bg-terciario); padding: 4px 8px; border-radius: 2px; color: #e4be7d; font-family: monospace; }
+        footer { margin-top: 60px; padding: 25px; text-align: center; border-top: 1px solid var(--dourado-subtle); font-size: 0.8rem; color: var(--txt-secundario); }
         footer a { color: var(--txt-secundario); text-decoration: none; }
     </style>
 </head>
@@ -115,7 +88,7 @@
     </header>
 
     <div class="main-content">
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; color: var(--dourado);">Controle Operacional de Contas</h2>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; color: var(--dourado);">Gestão de Licenças e Planos</h2>
         
         <div class="table-container">
             <table>
@@ -123,23 +96,36 @@
                     <tr>
                         <th>ID</th>
                         <th>Estudante</th>
-                        <th>E-mail</th>
+                        <th>WhatsApp</th>
                         <th>Nível</th>
-                        <th>Status</th>
-                        <th>Renovação</th>
-                        <th>Aba Vinculada</th>
+                        <th>Senha Corporativa</th>
+                        <th>Gerenciar Plano</th>
+                        <th>Aba Destino</th>
+                        <th>Ações de Expansão</th>
                     </tr>
                 </thead>
-                <tbody id="listaAlunos">
-                    <!-- Linha Mock para alinhamento inicial visual -->
+                <tbody id="tabelaCorpo">
+                    <!-- Linha Padrão de Exemplo (Bruno) para validação visual imediata -->
                     <tr>
                         <td>ALU001</td>
-                        <td>Veiga Sandálias (Laboratório)</td>
-                        <td>contato@veiga.com</td>
-                        <td>B1</td>
-                        <td><span class="badge ativo">Ativo</span></td>
-                        <td>24/12/2026</td>
+                        <td><strong>Bruno</strong><br><span style="font-size:0.8rem; color:var(--txt-secundario);">brunorsvieira@gmail.com</span></td>
+                        <td>27997161826</td>
+                        <td>A1</td>
+                        <td><code>EXEC4321</code></td>
+                        <td>
+                            <select class="plan-select" onchange="atualizarPlanoNoSheets('ALU001', this.value)">
+                                <option value="Premium Trial">Premium Trial (7d)</option>
+                                <option value="Free">Free</option>
+                                <option value="Básico">Básico</option>
+                                <option value="Premium" selected>Premium</option>
+                            </select>
+                        </td>
                         <td><code>SPEAK_ALU001</code></td>
+                        <td>
+                            <a href="https://wa.me/5527997161826?text=Olá%20Bruno,%20notamos%20que%20você%20está%20performando%20muito%20bem%20no%20Speak%20AI⁺.%20Que%20tal%20fazer%20o%20upgrade%20para%20o%20Plano%20Premium%20Anual%20e%20garantir%20acesso%20ilimitado%20à%20banca%20de%20erros%20Shadow%20Tracker?" target="_blank" class="btn-wa">
+                                Oferecer Upgrade
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -152,5 +138,12 @@
         <a href="@eumaisgestor">EU⁺ Gestor</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
     </footer>
 
+    <script>
+        // Função para engatilhar as atualizações de planos em tempo real
+        function atualizarPlanoNoSheets(idAluno, novoPlano) {
+            console.log(`Alterando plano do aluno ${idAluno} para: ${novoPlano}`);
+            // Quando sua esteira de faturamento estiver integrada, este gatilho envia a requisição de alteração ao Sheets.
+        }
+    </script>
 </body>
 </html>
