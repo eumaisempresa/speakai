@@ -90,7 +90,7 @@
             outline: none;
             border-color: var(--dourado);
         }
-        button {
+        button, .btn-wa {
             width: 100%;
             background-color: transparent;
             border: 1px solid var(--dourado);
@@ -104,10 +104,33 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 15px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
         }
-        button:hover {
+        button:hover, .btn-wa:hover {
             background-color: var(--dourado);
             color: var(--bg-principal);
+        }
+        .sucesso-container {
+            display: none;
+            text-align: center;
+        }
+        .sucesso-info {
+            background-color: var(--bg-principal);
+            border: 1px solid var(--dourado-subtle);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 2px;
+        }
+        .sucesso-info div {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .sucesso-info strong {
+            color: var(--dourado);
         }
         footer {
             padding: 25px;
@@ -129,31 +152,47 @@
     <div class="container">
         <div class="card-cadastro">
             <h1>Speak AI<span class="sup">⁺</span></h1>
-            <div class="tagline">Estrutura para quem lidera. Entre no ecossistema.</div>
             
-            <form id="formCadastro">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="nome" required autocomplete="off">
+            <div id="blocoFormulario">
+                <div class="tagline">Estrutura para quem lidera. Entre no ecossistema.</div>
+                <form id="formCadastro">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="nome" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="email" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="tel" id="whatsapp" placeholder="Ex: 27999998888" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Nível Estimado de Inglês</label>
+                        <select id="nivel_inicial">
+                            <option value="A1">A1 - Iniciante Prático</option>
+                            <option value="B1">B1 - Intermediário Técnico</option>
+                            <option value="C1">C1 - Executivo / Fluente</option>
+                        </select>
+                    </div>
+                    <button type="submit">Acesse 7 dias Premium grátis — sem cartão</button>
+                </form>
+            </div>
+
+            <div id="blocoSucesso" class="sucesso-container">
+                <div class="tagline" style="color: #7AAD66; margin-bottom: 20px; font-weight: 500;">✓ Cadastro efetuado com sucesso!</div>
+                <p style="font-size: 0.95rem; color: var(--txt-principal); line-height: 1.5; margin: 0;">Clique no botão abaixo para disparar as credenciais e o link de acesso diretamente para o WhatsApp do aluno.</p>
+                
+                <div class="sucesso-info">
+                    <div><strong>Senha Gerada:</strong> <span id="infoSenha"></span></div>
+                    <div><strong>Link do Aluno:</strong> <span style="font-size: 0.85rem; color: var(--txt-secundario);">speakai/aluno/</span></div>
                 </div>
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="email" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>WhatsApp</label>
-                    <input type="tel" id="whatsapp" placeholder="Ex: 27999998888" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>Nível Estimado de Inglês</label>
-                    <select id="nivel_inicial">
-                        <option value="A1">A1 - Iniciante Prático</option>
-                        <option value="B1">B1 - Intermediário Técnico</option>
-                        <option value="C1">C1 - Executivo / Fluente</option>
-                    </select>
-                </div>
-                <button type="submit">Acesse 7 dias Premium grátis — sem cartão</button>
-            </form>
+
+                <a href="#" id="lnkWhatsApp" target="_blank" class="btn-wa">Enviar Mensagem ao WhatsApp</a>
+                <a href="https://eumaisempresa.github.io/speakai/aluno/" id="lnkIrAluno" style="border-color: transparent; color: var(--txt-secundario); font-size: 0.8rem;" class="btn-wa">Ir para página do Aluno</a>
+            </div>
+
         </div>
     </div>
 
@@ -184,12 +223,11 @@
                     email: emailInjetado,
                     whatsapp: whatsappLimpo,
                     nivel_inicial: document.getElementById('nivel_inicial').value,
-                    plano: "Premium Trial" // Vincula automaticamente aos 7 dias grátis solicitados no botão
+                    plano: "Premium Trial"
                 }
             };
 
             try {
-                // Requisição de texto limpo para evitar erros de leitura e bloqueios CORS de resposta no Sheets
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain' },
@@ -199,16 +237,21 @@
                 const resultado = await response.json();
                 
                 if (resultado.status === "sucesso") {
-                    // 1. Criação dinâmica do conteúdo de mensagens para o WhatsApp
+                    // Texto da mensagem institucional formatada
                     const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
                     
                     const whatsappUrl = `https://wa.me/55${whatsappLimpo}?text=${encodeURIComponent(mensagemTexto)}`;
                     
-                    // 2. Abre o WhatsApp em uma aba separada com o texto pronto
-                    window.open(whatsappUrl, '_blank');
+                    // Alimenta os dados na tela visual de sucesso
+                    document.getElementById('infoSenha').innerText = resultado.senha;
+                    document.getElementById('lnkWhatsApp').href = whatsappUrl;
                     
-                    // 3. Redireciona a tela principal repassando o e-mail cadastrado
-                    window.location.href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(emailInjetado)}`;
+                    // Atualiza o link de redirecionamento manual com o e-mail parâmetro
+                    document.getElementById('lnkIrAluno').href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(emailInjetado)}`;
+
+                    // Alterna as telas de forma fluida
+                    document.getElementById('blocoFormulario').style.display = "none";
+                    document.getElementById('blocoSucesso').style.display = "block";
                 } else {
                     alert("Aviso do Sistema: " + resultado.message);
                     btn.innerText = textoBotaoOriginal;
