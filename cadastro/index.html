@@ -1,168 +1,84 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speak AI⁺ — Painel do Gestor de Matrículas</title>
-    <style>
-        :root {
-            --bg: #0a1118;
-            --card: #101b26;
-            --borda: #1b2e40;
-            --marca: #cca43b;
-            --txt: #ffffff;
-            --txt-dim: #8da2b5;
-        }
-        body {
-            background-color: var(--bg);
-            color: var(--txt);
-            font-family: system-ui, -apple-system, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: var(--card);
-            border: 1px solid var(--borda);
-            padding: 40px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 500px;
-        }
-        h2 {
-            margin-top: 0;
-            font-weight: 400;
-            color: var(--txt);
-            letter-spacing: -0.5px;
-            margin-bottom: 30px;
-        }
-        h2 span { color: var(--marca); }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--txt-dim);
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-        input, select {
-            width: 100%;
-            background-color: var(--bg);
-            border: 1px solid var(--borda);
-            padding: 12px;
-            border-radius: 4px;
-            color: var(--txt);
-            font-size: 1rem;
-            outline: none;
-        }
-        input:focus, select:focus {
-            border-color: var(--marca);
-        }
-        button {
-            width: 100%;
-            background-color: var(--marca);
-            color: var(--bg);
-            border: none;
-            padding: 15px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: 10px;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-    </style>
-</head>
-<body>
+<script>
+    // URL CENTRAL DO SEU ECOSSISTEMA (APPS SCRIPT)
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjL1V3I7Y6X8IbyY7_m0tXQpA6uX_xXxXXXXX/exec"; // Certifique-se de usar a sua URL de implantação ativa
 
-    <div class="container">
-        <h2>Matrícula Corporativa <span>Speak AI⁺</span></h2>
-        <form id="formCadastro" onsubmit="executarFluxoCadastro(event)">
-            <div class="form-group">
-                <label>Nome do Aluno</label>
-                <input type="text" id="nome" placeholder="Ex: Bruno Silva" required>
-            </div>
-            <div class="form-group">
-                <label>E-mail Corporativo</label>
-                <input type="email" id="email" placeholder="bruno@empresa.com.br" required>
-            </div>
-            <div class="form-group">
-                <label>WhatsApp (com DDD)</label>
-                <input type="tel" id="whatsapp" placeholder="27999998888" required>
-            </div>
-            <div class="form-group">
-                <label>Plano de Acesso</label>
-                <select id="plano">
-                    <option value="Free">Free (Até 5 mensagens)</option>
-                    <option value="Premium Trial">Premium Trial (7 dias)</option>
-                    <option value="Básico">Básico (R$ 29,90/mês)</option>
-                    <option value="Premium">Premium (R$ 99,90/mês)</option>
-                </select>
-            </div>
-            <button type="submit" id="btnSubmit">Finalizar e Emitir Credenciais</button>
-        </form>
-    </div>
+    // Função que intercepta o envio do seu formulário original
+    async function executarFluxoCadastro(e) {
+        e.preventDefault();
+        
+        // Mantém os IDs originais dos seus inputs para capturar os dados
+        const campoNome = document.getElementById('nome') || document.getElementById('nome_estudante');
+        const campoEmail = document.getElementById('email');
+        const campoWhatsapp = document.getElementById('whatsapp');
+        const campoPlano = document.getElementById('plano');
+        const btnSubmit = document.querySelector('button[type="submit"]') || document.getElementById('btnSubmit');
 
-    <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjL1V3I7Y6X8IbyY7_m0tXQpA6uX_xXxXXXXX/exec"; // Mesma URL do Apps Script
+        if (!campoNome || !campoEmail || !campoWhatsapp) {
+            alert("Erro interno: IDs dos campos do formulário não localizados.");
+            return;
+        }
 
-        async function ejecutarFluxoCadastro(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.innerText = "PROCESSANDO IMPLANTAÇÃO...";
-            btn.disabled = true;
+        const dados = {
+            nome: campoNome.value.trim(),
+            email: campoEmail.value.trim(),
+            whatsapp: campoWhatsapp.value.trim().replace(/\D/g, ''), // Limpa para deixar apenas números
+            plano: campoPlano ? campoPlano.value : "Free"
+        };
 
-            const dados = {
-                nome: document.getElementById('nome').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                whatsapp: document.getElementById('whatsapp').value.trim().replace(/\D/g, ''),
-                plano: document.getElementById('plano').value
-            };
+        // Feedback visual discreto no seu próprio botão
+        const textoBotaoOriginal = btnSubmit.innerText;
+        btnSubmit.innerText = "PROCESSANDO...";
+        btnSubmit.disabled = true;
 
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({
-                        acao: "cadastrar_aluno",
-                        dados: dados
-                    })
-                });
+        try {
+            // Envio em formato texto limpo para evitar bloqueio de CORS no Google Apps Script
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    acao: "cadastrar_aluno",
+                    dados: dados
+                })
+            });
 
-                const resultado = await response.json();
+            const resultado = await response.json();
 
-                if (resultado.status === "sucesso") {
-                    // 1. Mensagem para o WhatsApp do Aluno
-                    const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
-                    
-                    const whatsappUrl = `https://wa.me/55${dados.whatsapp}?text=${encodeURIComponent(mensagemTexto)}`;
-                    
-                    // Dispara abertura da aba do WhatsApp
-                    window.open(whatsappUrl, '_blank');
-                    
-                    alert("Aluno registrado! Enviando notificações e direcionando ao ecossistema...");
-
-                    // 2. Redirecionamento automático com parâmetro de e-mail limpo
-                    window.location.href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(dados.email)}`;
-                } else {
-                    alert("Erro: " + resultado.message);
-                    btn.innerText = "Finalizar e Emitir Credenciais";
-                    btn.disabled = false;
-                }
-            } catch (err) {
-                alert("Falha de comunicação de dados com o servidor.");
-                btn.innerText = "Finalizar e Emitir Credenciais";
-                btn.disabled = false;
+            if (resultado.status === "sucesso") {
+                // 1. Montagem da mensagem oficial do Grupo EU+ para o WhatsApp
+                const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
+                
+                const whatsappUrl = `https://wa.me/55${dados.whatsapp}?text=${encodeURIComponent(mensagemTexto)}`;
+                
+                // 2. Abre o WhatsApp em uma aba secundária imediatamente
+                window.open(whatsappUrl, '_blank');
+                
+                // 3. Redireciona a janela principal para a tela do aluno preenchendo o e-mail automaticamente
+                window.location.href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(dados.email)}`;
+            } else {
+                alert("Erro no Servidor: " + resultado.message);
+                btnSubmit.innerText = textoBotaoOriginal;
+                btnSubmit.disabled = false;
             }
+        } catch (err) {
+            alert("Falha de comunicação: Verifique se a URL do Apps Script está atualizada e publicada como 'Qualquer pessoa'.");
+            btnSubmit.innerText = textoBotaoOriginal;
+            btnSubmit.disabled = false;
         }
+    }
+
+    // Vincula o evento de envio ao seu formulário original assim que a página carregar
+    window.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form') || document.getElementById('formCadastro');
+        if (form) {
+            form.addEventListener('submit', executarFluxoCadastro);
+        }
+        
+        // Ajuste solicitado: Mudar o label de "E-mail Corporativo" para apenas "E-mail"
+        // Procura por qualquer texto contendo "E-mail Corporativo" nas labels e corrige dinamicamente
+        const labels = document.querySelectorAll('label');
+        labels.forEach(label => {
+            if (label.innerText.toLowerCase().includes('corporativo') && label.innerText.toLowerCase().includes('e-mail')) {
+                label.innerText = 'E-mail';
+            }
+        });
     </script>
-</body>
-</html>
