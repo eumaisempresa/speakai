@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro | Speak AI⁺ — EU⁺ Executivo</title>
-    <!-- Fontes Oficiais -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -99,9 +98,9 @@
             padding: 14px;
             font-family: 'DM Sans', sans-serif;
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 15px;
@@ -138,7 +137,7 @@
                     <input type="text" id="nome" required autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label>E-mail Corporativo</label>
+                    <label>E-mail</label>
                     <input type="email" id="email" required autocomplete="off">
                 </div>
                 <div class="form-group">
@@ -153,7 +152,7 @@
                         <option value="C1">C1 - Executivo / Fluente</option>
                     </select>
                 </div>
-                <button type="submit">Solicitar Acesso</button>
+                <button type="submit">Acesse 7 dias Premium grátis — sem cartão</button>
             </form>
         </div>
     </div>
@@ -170,32 +169,54 @@
         document.getElementById('formCadastro').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
+            const textoBotaoOriginal = btn.innerText;
+            
             btn.innerText = "PROCESSANDO...";
             btn.disabled = true;
+
+            const whatsappLimpo = document.getElementById('whatsapp').value.replace(/\D/g, '');
+            const emailInjetado = document.getElementById('email').value.trim();
 
             const payload = {
                 acao: "cadastrar_aluno",
                 dados: {
-                    nome: document.getElementById('nome').value,
-                    email: document.getElementById('email').value,
-                    whatsapp: document.getElementById('whatsapp').value,
-                    nivel_inicial: document.getElementById('nivel_inicial').value
+                    nome: document.getElementById('nome').value.trim(),
+                    email: emailInjetado,
+                    whatsapp: whatsappLimpo,
+                    nivel_inicial: document.getElementById('nivel_inicial').value,
+                    plano: "Premium Trial" // Vincula automaticamente aos 7 dias grátis solicitados no botão
                 }
             };
 
             try {
+                // Requisição de texto limpo para evitar erros de leitura e bloqueios CORS de resposta no Sheets
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Configuração padrão para integração limpa via Apps Script
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify(payload)
                 });
                 
-                alert("Solicitação processada com sucesso no ecossistema EU⁺! Seu ambiente está sendo criado.");
-                window.location.href = "https://eumaisempresa.github.io/speakai/aluno/";
+                const resultado = await response.json();
+                
+                if (resultado.status === "sucesso") {
+                    // 1. Criação dinâmica do conteúdo de mensagens para o WhatsApp
+                    const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
+                    
+                    const whatsappUrl = `https://wa.me/55${whatsappLimpo}?text=${encodeURIComponent(mensagemTexto)}`;
+                    
+                    // 2. Abre o WhatsApp em uma aba separada com o texto pronto
+                    window.open(whatsappUrl, '_blank');
+                    
+                    // 3. Redireciona a tela principal repassando o e-mail cadastrado
+                    window.location.href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(emailInjetado)}`;
+                } else {
+                    alert("Aviso do Sistema: " + resultado.message);
+                    btn.innerText = textoBotaoOriginal;
+                    btn.disabled = false;
+                }
             } catch (err) {
-                alert("Erro ao conectar com o servidor. Tente novamente.");
-                btn.innerText = "SOLICITAR ACESSO";
+                alert("Falha de rede ou sincronização. Verifique se as permissões de acesso da URL estão publicadas corretamente.");
+                btn.innerText = textoBotaoOriginal;
                 btn.disabled = false;
             }
         });
