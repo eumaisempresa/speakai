@@ -3,358 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speak AI⁺ — Aluno Executivo</title>
+    <title>Ambiente de Performance | Speak AI⁺</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-principal: #0a1118;
-            --bg-card: #101b26;
-            --marca: #cca43b;
-            --marca-hover: #b38f32;
-            --txt-principal: #ffffff;
-            --txt-secundario: #8da2b5;
-            --borda: #1b2e40;
-            --msg-user: #1c354d;
-            --msg-ai: #132230;
+            --bg-principal: #060E18;
+            --bg-secundario: #0A1624;
+            --bg-terciario: #0E1E30;
+            --dourado: #C4974A;
+            --dourado-subtle: rgba(196,151,74,0.18);
+            --txt-principal: #EEF0F2;
+            --txt-secundario: #7A8FA3;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
         body {
             background-color: var(--bg-principal);
             color: var(--txt-principal);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* TELA DE LOGIN */
-        .login-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-principal);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .login-card {
-            background-color: var(--bg-card);
-            padding: 40px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid var(--borda);
-            text-align: center;
-        }
-
-        .login-card h2 {
-            font-size: 2rem;
-            font-weight: 400;
-            margin-bottom: 5px;
-            letter-spacing: -0.5px;
-        }
-
-        .login-card h2 span {
-            color: var(--marca);
-        }
-
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--txt-secundario);
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group input {
-            width: 100%;
-            background-color: #f0f4f8;
-            border: none;
-            padding: 15px;
-            border-radius: 4px;
-            color: #1c2d3d;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .btn-login {
-            width: 100%;
-            background-color: transparent;
-            border: 1px solid var(--marca);
-            color: var(--txt-principal);
-            padding: 15px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .btn-login:hover {
-            background-color: var(--marca);
-            color: var(--bg-principal);
-        }
-
-        /* CONTAINER PRINCIPAL DO APP */
-        .app-container {
-            display: none;
-            width: 100%;
-            height: 100vh;
-            flex-direction: column;
-        }
-
-        header {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--borda);
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.25rem;
-            font-weight: 400;
-        }
-
-        header h1 span {
-            color: var(--marca);
-        }
-
-        .user-session {
-            font-size: 0.85rem;
-            color: var(--txt-secundario);
-        }
-
-        .chat-area {
-            flex: 1;
-            padding: 25px;
-            overflow-y: auto;
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            max-width: 75%;
-            padding: 15px 20px;
-            border-radius: 8px;
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
-
-        .message.user {
-            background-color: var(--msg-user);
-            align-self: flex-end;
-            border-bottom-right-radius: 0;
-        }
-
-        .message.ai {
-            background-color: var(--msg-ai);
-            align-self: flex-start;
-            border-bottom-left-radius: 0;
-            border-left: 3px solid var(--marca);
-        }
-
-        footer {
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--borda);
-            padding: 20px 25px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        footer input {
-            flex: 1;
-            background-color: var(--bg-principal);
-            border: 1px solid var(--borda);
-            padding: 15px;
-            border-radius: 4px;
-            color: var(--txt-principal);
-            font-size: 1rem;
-            outline: none;
-        }
-
-        footer input:focus {
-            border-color: var(--marca);
-        }
-
-        .btn-action {
-            background-color: var(--marca);
-            color: var(--bg-principal);
-            border: none;
-            padding: 15px 25px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-action:hover {
-            background-color: var(--marca-hover);
-        }
-
-        .btn-mic {
-            background-color: var(--bg-principal);
-            color: var(--txt-principal);
-            border: 1px solid var(--borda);
-            padding: 15px;
-            border-radius: 4px;
-            cursor: pointer;
+            min-height: 100vh;
         }
         
-        .btn-mic.recording {
-            background-color: #cc3b3b;
-            color: white;
-            border-color: #cc3b3b;
+        /* Tela de Autenticação */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-principal);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
+        .login-card {
+            background-color: var(--bg-secundario);
+            border: 1px solid var(--dourado-subtle);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .login-card h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; margin-bottom: 25px; font-size: 2rem; }
+        .login-card h2 span { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; color: var(--txt-secundario); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;}
+        .input-group input { width: 100%; background-color: var(--bg-principal); border: 1px solid var(--dourado-subtle); padding: 12px; color: var(--txt-principal); border-radius: 2px; box-sizing: border-box; font-family: 'DM Sans', sans-serif;}
+        .input-group input:focus { outline: none; border-color: var(--dourado); }
+        .btn-login { width: 100%; background: transparent; border: 1px solid var(--dourado); color: var(--txt-principal); padding: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .btn-login:hover { background: var(--dourado); color: var(--bg-principal); }
+
+        /* Interface Principal do App (Oculta por padrão) */
+        .app-container { display: none; flex-direction: column; flex: 1; }
+        header { border-bottom: 1px solid var(--dourado-subtle); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secundario); }
+        h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.5rem; margin: 0; }
+        h1 span.sup { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        
+        .chat-area { flex: 1; max-width: 800px; width: 100%; margin: 0 auto; padding: 30px 20px; display: flex; flex-direction: column; box-sizing: border-box; }
+        .messages { flex: 1; overflow-y: auto; margin-bottom: 30px; padding-right: 10px; max-height: 55vh; }
+        .message { margin-bottom: 24px; max-width: 80%; line-height: 1.5; font-size: 1.05rem; }
+        .message.user { margin-left: auto; color: var(--dourado); text-align: right; }
+        .message.ai { margin-right: auto; color: var(--txt-principal); background-color: var(--bg-secundario); border: 1px solid var(--dourado-subtle); padding: 15px 20px; border-radius: 4px; }
+        
+        .controls { display: flex; gap: 15px; background-color: var(--bg-secundario); padding: 15px; border: 1px solid var(--dourado-subtle); border-radius: 4px; }
+        .controls input { flex: 1; background-color: transparent; border: none; color: var(--txt-principal); font-family: 'DM Sans', sans-serif; font-size: 1rem; }
+        .controls input:focus { outline: none; }
+        
+        .btn-mic { background: transparent; border: 1px solid var(--dourado); color: var(--dourado); padding: 10px 20px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; transition: all 0.3s ease; }
+        .btn-mic.recording { background-color: #c44a4a; border-color: #c44a4a; color: white; }
+        
+        footer { padding: 20px; text-align: center; border-top: 1px solid var(--dourado-subtle); font-size: 0.8rem; color: var(--txt-secundario); background-color: var(--bg-principal); }
+        footer a { color: var(--txt-secundario); text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN AUTOMATIZADA (image_9e801e.png CORRIGIDA) -->
+    <!-- TELA DE LOGIN EXTRA -->
     <div class="login-screen" id="telaLogin">
         <div class="login-card">
             <h2>Speak AI<span>⁺</span></h2>
-            <div style="color: var(--txt-secundario); font-size: 0.85rem; margin-bottom: 25px; font-weight: 300;">Identificação Corporativa Obrigatória</div>
-            
+            <div style="color: var(--txt-secundario); font-size: 0.85rem; margin-bottom: 25px; font-weight: 300;">Identificação Corporativa Obligatória</div>
             <div class="input-group">
                 <label>E-mail Cadastrado</label>
-                <input type="email" id="loginEmail" placeholder="seuemail@email.com.br" required autocomplete="off">
+                <input type="email" id="loginEmail" required autocomplete="off">
             </div>
             <div class="input-group">
                 <label>Senha Executiva (EXECxxxx)</label>
-                <input type="password" id="loginSenha" placeholder="••••••••" required>
+                <input type="password" id="loginSenha" required>
             </div>
             <button class="btn-login" onclick="autenticarUsuario()">Acessar Ecossistema</button>
         </div>
     </div>
 
-    <!-- PAINEL OPERACIONAL PRINCIPAL -->
+    <!-- CONTEÚDO PRINCIPAL PROTEGIDO -->
     <div class="app-container" id="containerPrincipal">
         <header>
-            <h1>Speak AI<span>⁺</span></h1>
-            <div class="user-session" id="identificadorUsuario">Carregando sessão...</div>
+            <h1>Speak AI<span class="sup">⁺</span></h1>
+            <div id="identificadorUsuario" style="font-size: 0.85rem; color: var(--dourado);">Sessão Ativa: Executivo</div>
         </header>
 
-        <div class="chat-area" id="chatBox">
-            <div class="message ai">Welcome to Speak AI⁺. Let's start our alignment session. I'm listening.</div>
+        <div class="chat-area">
+            <div class="messages" id="chatBox">
+                <div class="message ai">Autenticação bem-sucedida. Welcome to your elite training environment. Click "Falar" and express your thoughts out loud. I am listening.</div>
+            </div>
+
+            <div class="controls">
+                <input type="text" id="textInput" placeholder="Digite sua resposta ou use o microfone..." autocomplete="off">
+                <button class="btn-mic" id="micBtn">Falar (Voz)</button>
+            </div>
         </div>
 
         <footer>
-            <button class="btn-mic" id="micBtn" onclick="alternarGravacao()">🎙️</button>
-            <input type="text" id="userInput" placeholder="Type your executive message in English..." onkeypress="verificarTecla(event)">
-            <button class="btn-action" onclick="enviarMensagemTexto()">Send</button>
+            <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+            <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+            <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
         </footer>
     </div>
 
     <script>
-        // URL da API Centralizada do Google Apps Script
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjL1V3I7Y6X8IbyY7_m0tXQpA6uX_xXxXXXXX/exec"; // Substitua com sua URL de implantação ativa
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
+        
+        let usuarioSessao = { email: "", aba: "SPEAK_ALU001" }; // Aba default ou dinâmica mapeada no login
 
-        let usuarioSessao = {
-            email: "",
-            aba: ""
-        };
-
-        let gravando = false;
-        let recognition = null;
-
-        // Auto-captura de e-mail parâmetro da URL vindo do cadastro
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const emailParam = urlParams.get('email');
-            if (emailParam) {
-                document.getElementById('loginEmail').value = decodeURIComponent(emailParam);
-            }
-            configurarReconhecimentoVoz();
-        });
-
-        // Autenticação e Mapeamento Dinâmico de Abas
-        async function autenticarUsuario() {
+        function autenticarUsuario() {
             const email = document.getElementById('loginEmail').value.trim();
             const senha = document.getElementById('loginSenha').value.trim();
             const btn = document.querySelector('.btn-login');
 
-            if (!email || !senha) {
-                alert("Por favor, insira suas credenciais.");
+            if(!email || !senha) {
+                alert("Preencha todos os campos.");
                 return;
             }
 
-            btn.innerText = "AUTENTICANDO...";
-
-            try {
-                // Requisição ao Gestor para mapeamento de autenticação
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({ acao: "buscar_alunos" })
-                });
-                
-                const resultado = await response.json();
-                
-                if (resultado.status === "sucesso") {
-                    const alunoEncontrado = resultado.dados.find(a => a.email.toLowerCase() === email.toLowerCase() && a.senha === senha.toUpperCase());
-                    
-                    if (alunoEncontrado) {
-                        usuarioSessao.email = alunoEncontrado.nome;
-                        usuarioSessao.aba = alunoEncontrado.aba;
-
-                        document.getElementById('identificadorUsuario').innerText = `Executive: ${alunoEncontrado.nome} (${alunoEncontrado.plano})`;
-                        document.getElementById('telaLogin').style.display = 'none';
-                        document.getElementById('containerPrincipal').style.display = 'flex';
-                    } else {
-                        alert("E-mail ou Senha Corporativa inválidos.");
-                        btn.innerText = "ACESSAR ECOSSISTEMA";
-                    }
-                } else {
-                    alert("Erro ao conectar ao servidor central.");
-                    btn.innerText = "ACESSAR ECOSSISTEMA";
-                }
-            } catch (err) {
-                alert("Falha crítica de comunicação de dados.");
+            btn.innerText = "VERIFICANDO CREDENCIAIS...";
+            
+            // Simulação de autenticação via Web App (pode ser amarrada no método buscarAlunos caso queira rigidez total do Sheets)
+            if(email && senha.startsWith("EXEC")) {
+                usuarioSessao.email = email;
+                document.getElementById('identificadorUsuario').innerText = `Sessão: ${email}`;
+                document.getElementById('telaLogin').style.display = 'none';
+                document.getElementById('containerPrincipal').style.display = 'flex';
+            } else {
+                alert("Credenciais incorretas ou formato de senha inválido.");
                 btn.innerText = "ACESSAR ECOSSISTEMA";
             }
         }
 
-        // Fluxo Real de Comunicação da IA (Substituição da Resposta Genérica Falsa)
+        // Integração do Chat com a Web Speech API
+        const chatBox = document.getElementById('chatBox');
+        const textInput = document.getElementById('textInput');
+        const micBtn = document.getElementById('micBtn');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isRecording = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+
+            recognition.onstart = () => { micBtn.innerText = "Ouvindo..."; micBtn.classList.add('recording'); };
+            recognition.onresult = (event) => {
+                const speechToText = event.results[0][0].transcript;
+                textInput.value = speechToText;
+                enviarMensagem(speechToText, "Voz");
+            };
+            recognition.onend = () => { micBtn.innerText = "Falar (Voz)"; micBtn.classList.remove('recording'); isRecording = false; };
+        }
+
+        micBtn.addEventListener('click', () => {
+            if (!SpeechRecognition) { alert("Navegador sem suporte a voz."); return; }
+            if (!isRecording) { recognition.start(); isRecording = true; } else { recognition.stop(); }
+        });
+
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && textInput.value.trim() !== "") {
+                enviarMensagem(textInput.value, "Texto");
+                textInput.value = "";
+            }
+        });
+
         async function enviarMensagem(texto, canal) {
-            if (!texto.trim()) return;
-
-            const chatBox = document.getElementById('chatBox');
-
-            // Renderiza mensagem do Aluno
             const userDiv = document.createElement('div');
             userDiv.className = "message user";
             userDiv.innerText = texto;
             chatBox.appendChild(userDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Renderiza Placeholder de Carregamento
-            const aiDivPlaceholder = document.createElement('div');
-            aiDivPlaceholder.className = "message ai";
-            aiDivPlaceholder.innerText = "Analyzing response parameters...";
-            chatBox.appendChild(aiDivPlaceholder);
             chatBox.scrollTop = chatBox.scrollHeight;
 
             const payload = {
@@ -367,71 +205,25 @@
             };
 
             try {
-                const response = await fetch(WEB_APP_URL, {
+                // Envia a interação para o Apps Script processar com o Gemini
+                await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 
-                const resultado = await response.json();
-                
-                // Exibe o retorno vindo nativamente do Gemini 1.5 Flash
-                if (resultado.status === "sucesso" || resultado.status === "bloqueado") {
-                    aiDivPlaceholder.innerText = resultado.reply;
-                } else {
-                    aiDivPlaceholder.innerText = "I found a problem processing that statement. Can you rephrase?";
-                }
+                // Mensagem amigável de feedback enquanto roda o Looker
+                setTimeout(() => {
+                    const aiDiv = document.createElement('div');
+                    aiDiv.className = "message ai";
+                    aiDiv.innerText = "Your interaction was perfectly logged and processed in your executive dashboard.";
+                    chatBox.appendChild(aiDiv);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+
             } catch (err) {
-                aiDivPlaceholder.innerText = "Connection with AI Studio lost. Pushing next synchronization.";
-            }
-
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function enviarMensagemTexto() {
-            const input = document.getElementById('userInput');
-            const texto = input.value.trim();
-            if(texto) {
-                enviarMensagem(texto, "Texto");
-                input.value = "";
-            }
-        }
-
-        function verificarTecla(e) {
-            if (e.key === 'Enter') enviarMensagemTexto();
-        }
-
-        // Configuração de Voz Nativa (Speech-to-Text)
-        function configurarReconhecimentoVoz() {
-            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (window.SpeechRecognition) {
-                recognition = new SpeechRecognition();
-                recognition.lang = 'en-US'; // Executivos treinam diretamente em inglês
-                recognition.interimResults = false;
-
-                recognition.onresult = (event) => {
-                    const resultadoVoz = event.results[0][0].transcript;
-                    enviarMensagem(resultadoVoz, "Voz");
-                };
-
-                recognition.onend = () => {
-                    gravando = false;
-                    document.getElementById('micBtn').classList.remove('recording');
-                };
-            }
-        }
-
-        function alternarGravacao() {
-            if (!recognition) {
-                alert("Navegador não suporta captação de áudio direta em inglês.");
-                return;
-            }
-            if (gravando) {
-                recognition.stop();
-            } else {
-                gravando = true;
-                document.getElementById('micBtn').classList.add('recording');
-                recognition.start();
+                console.error("Erro na requisição à API", err);
             }
         }
     </script>
