@@ -3,202 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro | Speak AI⁺ — EU⁺ Executivo</title>
-    <!-- Fontes Oficiais -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Speak AI⁺ — Painel do Gestor de Matrículas</title>
     <style>
         :root {
-            --bg-principal: #060E18;
-            --bg-secundario: #0A1624;
-            --dourado: #C4974A;
-            --dourado-subtle: rgba(196,151,74,0.18);
-            --txt-principal: #EEF0F2;
-            --txt-secundario: #7A8FA3;
+            --bg: #0a1118;
+            --card: #101b26;
+            --borda: #1b2e40;
+            --marca: #cca43b;
+            --txt: #ffffff;
+            --txt-dim: #8da2b5;
         }
         body {
-            background-color: var(--bg-principal);
-            color: var(--txt-principal);
-            font-family: 'DM Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            flex: 1;
+            background-color: var(--bg);
+            color: var(--txt);
+            font-family: system-ui, -apple-system, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            min-height: 100vh;
+            margin: 0;
         }
-        .card-cadastro {
-            background-color: var(--bg-secundario);
-            border: 1px solid var(--dourado-subtle);
-            padding: 50px;
+        .container {
+            background-color: var(--card);
+            border: 1px solid var(--borda);
+            padding: 40px;
+            border-radius: 8px;
             width: 100%;
-            max-width: 480px;
-            border-radius: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            max-width: 500px;
         }
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
+        h2 {
+            margin-top: 0;
             font-weight: 400;
-            font-size: 2.2rem;
-            color: var(--txt-principal);
-            margin: 0 0 10px 0;
-            letter-spacing: 0.02em;
+            color: var(--txt);
+            letter-spacing: -0.5px;
+            margin-bottom: 30px;
         }
-        h1 span.sup {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            color: var(--dourado);
-            font-size: 0.42em;
-            vertical-align: super;
-        }
-        .tagline {
-            color: var(--txt-secundario);
-            font-size: 0.95rem;
-            margin-bottom: 35px;
-            font-weight: 300;
-        }
+        h2 span { color: var(--marca); }
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            font-size: 0.85rem;
-            color: var(--txt-secundario);
-            margin-bottom: 8px;
-            letter-spacing: 0.05em;
+            font-size: 0.75rem;
             text-transform: uppercase;
+            color: var(--txt-dim);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
         input, select {
             width: 100%;
-            background-color: var(--bg-principal);
-            border: 1px solid var(--dourado-subtle);
-            padding: 12px 16px;
-            color: var(--txt-principal);
-            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            border: 1px solid var(--borda);
+            padding: 12px;
+            border-radius: 4px;
+            color: var(--txt);
             font-size: 1rem;
-            border-radius: 2px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
+            outline: none;
         }
         input:focus, select:focus {
-            outline: none;
-            border-color: var(--dourado);
+            border-color: var(--marca);
         }
         button {
             width: 100%;
-            background-color: transparent;
-            border: 1px solid var(--dourado);
-            color: var(--txt-principal);
-            padding: 14px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 500;
+            background-color: var(--marca);
+            color: var(--bg);
+            border: none;
+            padding: 15px;
             font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-weight: 600;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
+            transition: opacity 0.2s;
+            margin-top: 10px;
         }
         button:hover {
-            background-color: var(--dourado);
-            color: var(--bg-principal);
+            opacity: 0.9;
         }
-        footer {
-            padding: 25px;
-            text-align: center;
-            border-top: 1px solid var(--dourado-subtle);
-            font-size: 0.8rem;
-            color: var(--txt-secundario);
-            letter-spacing: 0.05em;
-        }
-        footer a {
-            color: var(--txt-secundario);
-            text-decoration: none;
-        }
-        footer a:hover { color: var(--dourado); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="card-cadastro">
-            <h1>Speak AI<span class="sup">⁺</span></h1>
-            <div class="tagline">Estrutura para quem lidera. Entre no ecossistema.</div>
-            
-            <form id="formCadastro">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="nome" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>E-mail Corporativo</label>
-                    <input type="email" id="email" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>WhatsApp</label>
-                    <input type="tel" id="whatsapp" placeholder="Ex: 27999998888" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>Nível Estimado de Inglês</label>
-                    <select id="nivel_inicial">
-                        <option value="A1">A1 - Iniciante Prático</option>
-                        <option value="B1">B1 - Intermediário Técnico</option>
-                        <option value="C1">C1 - Executivo / Fluente</option>
-                    </select>
-                </div>
-                <button type="submit">Solicitar Acesso</button>
-            </form>
-        </div>
+        <h2>Matrícula Corporativa <span>Speak AI⁺</span></h2>
+        <form id="formCadastro" onsubmit="executarFluxoCadastro(event)">
+            <div class="form-group">
+                <label>Nome do Aluno</label>
+                <input type="text" id="nome" placeholder="Ex: Bruno Silva" required>
+            </div>
+            <div class="form-group">
+                <label>E-mail Corporativo</label>
+                <input type="email" id="email" placeholder="bruno@empresa.com.br" required>
+            </div>
+            <div class="form-group">
+                <label>WhatsApp (com DDD)</label>
+                <input type="tel" id="whatsapp" placeholder="27999998888" required>
+            </div>
+            <div class="form-group">
+                <label>Plano de Acesso</label>
+                <select id="plano">
+                    <option value="Free">Free (Até 5 mensagens)</option>
+                    <option value="Premium Trial">Premium Trial (7 dias)</option>
+                    <option value="Básico">Básico (R$ 29,90/mês)</option>
+                    <option value="Premium">Premium (R$ 99,90/mês)</option>
+                </select>
+            </div>
+            <button type="submit" id="btnSubmit">Finalizar e Emitir Credenciais</button>
+        </form>
     </div>
 
-    <footer>
-        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
-        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
-        <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
-    </footer>
-
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxjL1V3I7Y6X8IbyY7_m0tXQpA6uX_xXxXXXXX/exec"; // Mesma URL do Apps Script
 
-        document.getElementById('formCadastro').addEventListener('submit', async (e) => {
+        async function ejecutarFluxoCadastro(e) {
             e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "PROCESSANDO...";
+            const btn = document.getElementById('btnSubmit');
+            btn.innerText = "PROCESSANDO IMPLANTAÇÃO...";
             btn.disabled = true;
 
-            const payload = {
-                acao: "cadastrar_aluno",
-                dados: {
-                    nome: document.getElementById('nome').value,
-                    email: document.getElementById('email').value,
-                    whatsapp: document.getElementById('whatsapp').value,
-                    nivel_inicial: document.getElementById('nivel_inicial').value
-                }
+            const dados = {
+                nome: document.getElementById('nome').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                whatsapp: document.getElementById('whatsapp').value.trim().replace(/\D/g, ''),
+                plano: document.getElementById('plano').value
             };
 
             try {
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Configuração padrão para integração limpa via Apps Script
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        acao: "cadastrar_aluno",
+                        dados: dados
+                    })
                 });
-                
-                alert("Solicitação processada com sucesso no ecossistema EU⁺! Seu ambiente está sendo criado.");
-                window.location.href = "https://eumaisempresa.github.io/speakai/aluno/";
+
+                const resultado = await response.json();
+
+                if (resultado.status === "sucesso") {
+                    // 1. Mensagem para o WhatsApp do Aluno
+                    const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
+                    
+                    const whatsappUrl = `https://wa.me/55${dados.whatsapp}?text=${encodeURIComponent(mensagemTexto)}`;
+                    
+                    // Dispara abertura da aba do WhatsApp
+                    window.open(whatsappUrl, '_blank');
+                    
+                    alert("Aluno registrado! Enviando notificações e direcionando ao ecossistema...");
+
+                    // 2. Redirecionamento automático com parâmetro de e-mail limpo
+                    window.location.href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(dados.email)}`;
+                } else {
+                    alert("Erro: " + resultado.message);
+                    btn.innerText = "Finalizar e Emitir Credenciais";
+                    btn.disabled = false;
+                }
             } catch (err) {
-                alert("Erro ao conectar com o servidor. Tente novamente.");
-                btn.innerText = "SOLICITAR ACESSO";
+                alert("Falha de comunicação de dados com o servidor.");
+                btn.innerText = "Finalizar e Emitir Credenciais";
                 btn.disabled = false;
             }
-        });
+        }
     </script>
 </body>
 </html>
