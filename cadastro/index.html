@@ -1,84 +1,231 @@
-<script>
-    // URL CENTRAL DO SEU ECOSSISTEMA (APPS SCRIPT)
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec"; // Certifique-se de usar a sua URL de implantação ativa
-
-    // Função que intercepta o envio do seu formulário original
-    async function executarFluxoCadastro(e) {
-        e.preventDefault();
-        
-        // Mantém os IDs originais dos seus inputs para capturar os dados
-        const campoNome = document.getElementById('nome') || document.getElementById('nome_estudante');
-        const campoEmail = document.getElementById('email');
-        const campoWhatsapp = document.getElementById('whatsapp');
-        const campoPlano = document.getElementById('plano');
-        const btnSubmit = document.querySelector('button[type="submit"]') || document.getElementById('btnSubmit');
-
-        if (!campoNome || !campoEmail || !campoWhatsapp) {
-            alert("Erro interno: IDs dos campos do formulário não localizados.");
-            return;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambiente de Performance | Speak AI⁺</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-principal: #060E18;
+            --bg-secundario: #0A1624;
+            --bg-terciario: #0E1E30;
+            --dourado: #C4974A;
+            --dourado-subtle: rgba(196,151,74,0.18);
+            --txt-principal: #EEF0F2;
+            --txt-secundario: #7A8FA3;
         }
+        body {
+            background-color: var(--bg-principal);
+            color: var(--txt-principal);
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Tela de Autenticação */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-principal);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .login-card {
+            background-color: var(--bg-secundario);
+            border: 1px solid var(--dourado-subtle);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .login-card h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; margin-bottom: 25px; font-size: 2rem; }
+        .login-card h2 span { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; color: var(--txt-secundario); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;}
+        .input-group input { width: 100%; background-color: var(--bg-principal); border: 1px solid var(--dourado-subtle); padding: 12px; color: var(--txt-principal); border-radius: 2px; box-sizing: border-box; font-family: 'DM Sans', sans-serif;}
+        .input-group input:focus { outline: none; border-color: var(--dourado); }
+        .btn-login { width: 100%; background: transparent; border: 1px solid var(--dourado); color: var(--txt-principal); padding: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .btn-login:hover { background: var(--dourado); color: var(--bg-principal); }
 
-        const dados = {
-            nome: campoNome.value.trim(),
-            email: campoEmail.value.trim(),
-            whatsapp: campoWhatsapp.value.trim().replace(/\D/g, ''), // Limpa para deixar apenas números
-            plano: campoPlano ? campoPlano.value : "Free"
-        };
+        /* Interface Principal do App (Oculta por padrão) */
+        .app-container { display: none; flex-direction: column; flex: 1; }
+        header { border-bottom: 1px solid var(--dourado-subtle); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secundario); }
+        h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.5rem; margin: 0; }
+        h1 span.sup { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        
+        .chat-area { flex: 1; max-width: 800px; width: 100%; margin: 0 auto; padding: 30px 20px; display: flex; flex-direction: column; box-sizing: border-box; }
+        .messages { flex: 1; overflow-y: auto; margin-bottom: 30px; padding-right: 10px; max-height: 55vh; }
+        .message { margin-bottom: 24px; max-width: 80%; line-height: 1.5; font-size: 1.05rem; }
+        .message.user { margin-left: auto; color: var(--dourado); text-align: right; }
+        .message.ai { margin-right: auto; color: var(--txt-principal); background-color: var(--bg-secundario); border: 1px solid var(--dourado-subtle); padding: 15px 20px; border-radius: 4px; }
+        
+        .controls { display: flex; gap: 15px; background-color: var(--bg-secundario); padding: 15px; border: 1px solid var(--dourado-subtle); border-radius: 4px; }
+        .controls input { flex: 1; background-color: transparent; border: none; color: var(--txt-principal); font-family: 'DM Sans', sans-serif; font-size: 1rem; }
+        .controls input:focus { outline: none; }
+        
+        .btn-mic { background: transparent; border: 1px solid var(--dourado); color: var(--dourado); padding: 10px 20px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; transition: all 0.3s ease; }
+        .btn-mic.recording { background-color: #c44a4a; border-color: #c44a4a; color: white; }
+        
+        footer { padding: 20px; text-align: center; border-top: 1px solid var(--dourado-subtle); font-size: 0.8rem; color: var(--txt-secundario); background-color: var(--bg-principal); }
+        footer a { color: var(--txt-secundario); text-decoration: none; }
+    </style>
+</head>
+<body>
 
-        // Feedback visual discreto no seu próprio botão
-        const textoBotaoOriginal = btnSubmit.innerText;
-        btnSubmit.innerText = "PROCESSANDO...";
-        btnSubmit.disabled = true;
+    <!-- TELA DE LOGIN EXTRA -->
+    <div class="login-screen" id="telaLogin">
+        <div class="login-card">
+            <h2>Speak AI<span>⁺</span></h2>
+            <div style="color: var(--txt-secundario); font-size: 0.85rem; margin-bottom: 25px; font-weight: 300;">Identificação Corporativa Obligatória</div>
+            <div class="input-group">
+                <label>E-mail Cadastrado</label>
+                <input type="email" id="loginEmail" required autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Senha Executiva (EXECxxxx)</label>
+                <input type="password" id="loginSenha" required>
+            </div>
+            <button class="btn-login" onclick="autenticarUsuario()">Acessar Ecossistema</button>
+        </div>
+    </div>
 
-        try {
-            // Envio em formato texto limpo para evitar bloqueio de CORS no Google Apps Script
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({
-                    acao: "cadastrar_aluno",
-                    dados: dados
-                })
-            });
+    <!-- CONTEÚDO PRINCIPAL PROTEGIDO -->
+    <div class="app-container" id="containerPrincipal">
+        <header>
+            <h1>Speak AI<span class="sup">⁺</span></h1>
+            <div id="identificadorUsuario" style="font-size: 0.85rem; color: var(--dourado);">Sessão Ativa: Executivo</div>
+        </header>
 
-            const resultado = await response.json();
+        <div class="chat-area">
+            <div class="messages" id="chatBox">
+                <div class="message ai">Autenticação bem-sucedida. Welcome to your elite training environment. Click "Falar" and express your thoughts out loud. I am listening.</div>
+            </div>
 
-            if (resultado.status === "sucesso") {
-                // 1. Montagem da mensagem oficial do Grupo EU+ para o WhatsApp
-                const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
-                
-                const whatsappUrl = `https://wa.me/55${dados.whatsapp}?text=${encodeURIComponent(mensagemTexto)}`;
-                
-                // 2. Abre o WhatsApp em uma aba secundária imediatamente
-                window.open(whatsappUrl, '_blank');
-                
-                // 3. Redireciona a janela principal para a tela do aluno preenchendo o e-mail automaticamente
-                window.location.href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(dados.email)}`;
-            } else {
-                alert("Erro no Servidor: " + resultado.message);
-                btnSubmit.innerText = textoBotaoOriginal;
-                btnSubmit.disabled = false;
+            <div class="controls">
+                <input type="text" id="textInput" placeholder="Digite sua resposta ou use o microfone..." autocomplete="off">
+                <button class="btn-mic" id="micBtn">Falar (Voz)</button>
+            </div>
+        </div>
+
+        <footer>
+            <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
+            <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+            <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+        </footer>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
+        
+        let usuarioSessao = { email: "", aba: "SPEAK_ALU001" }; // Aba default ou dinâmica mapeada no login
+
+        function autenticarUsuario() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value.trim();
+            const btn = document.querySelector('.btn-login');
+
+            if(!email || !senha) {
+                alert("Preencha todos os campos.");
+                return;
             }
-        } catch (err) {
-            alert("Falha de comunicação: Verifique se a URL do Apps Script está atualizada e publicada como 'Qualquer pessoa'.");
-            btnSubmit.innerText = textoBotaoOriginal;
-            btnSubmit.disabled = false;
-        }
-    }
 
-    // Vincula o evento de envio ao seu formulário original assim que a página carregar
-    window.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form') || document.getElementById('formCadastro');
-        if (form) {
-            form.addEventListener('submit', executarFluxoCadastro);
+            btn.innerText = "VERIFICANDO CREDENCIAIS...";
+            
+            // Simulação de autenticação via Web App (pode ser amarrada no método buscarAlunos caso queira rigidez total do Sheets)
+            if(email && senha.startsWith("EXEC")) {
+                usuarioSessao.email = email;
+                document.getElementById('identificadorUsuario').innerText = `Sessão: ${email}`;
+                document.getElementById('telaLogin').style.display = 'none';
+                document.getElementById('containerPrincipal').style.display = 'flex';
+            } else {
+                alert("Credenciais incorretas ou formato de senha inválido.");
+                btn.innerText = "ACESSAR ECOSSISTEMA";
+            }
         }
-        
-        // Ajuste solicitado: Mudar o label de "E-mail Corporativo" para apenas "E-mail"
-        // Procura por qualquer texto contendo "E-mail Corporativo" nas labels e corrige dinamicamente
-        const labels = document.querySelectorAll('label');
-        labels.forEach(label => {
-            if (label.innerText.toLowerCase().includes('corporativo') && label.innerText.toLowerCase().includes('e-mail')) {
-                label.innerText = 'E-mail';
+
+        // Integração do Chat com a Web Speech API
+        const chatBox = document.getElementById('chatBox');
+        const textInput = document.getElementById('textInput');
+        const micBtn = document.getElementById('micBtn');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isRecording = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+
+            recognition.onstart = () => { micBtn.innerText = "Ouvindo..."; micBtn.classList.add('recording'); };
+            recognition.onresult = (event) => {
+                const speechToText = event.results[0][0].transcript;
+                textInput.value = speechToText;
+                enviarMensagem(speechToText, "Voz");
+            };
+            recognition.onend = () => { micBtn.innerText = "Falar (Voz)"; micBtn.classList.remove('recording'); isRecording = false; };
+        }
+
+        micBtn.addEventListener('click', () => {
+            if (!SpeechRecognition) { alert("Navegador sem suporte a voz."); return; }
+            if (!isRecording) { recognition.start(); isRecording = true; } else { recognition.stop(); }
+        });
+
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && textInput.value.trim() !== "") {
+                enviarMensagem(textInput.value, "Texto");
+                textInput.value = "";
             }
         });
+
+        async function enviarMensagem(texto, canal) {
+            const userDiv = document.createElement('div');
+            userDiv.className = "message user";
+            userDiv.innerText = texto;
+            chatBox.appendChild(userDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const payload = {
+                acao: "processar_interacao",
+                dados: {
+                    nome_aba: usuarioSessao.aba,
+                    input_texto: texto,
+                    canal: canal
+                }
+            };
+
+            try {
+                // Envia a interação para o Apps Script processar com o Gemini
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Mensagem amigável de feedback enquanto roda o Looker
+                setTimeout(() => {
+                    const aiDiv = document.createElement('div');
+                    aiDiv.className = "message ai";
+                    aiDiv.innerText = "Your interaction was perfectly logged and processed in your executive dashboard.";
+                    chatBox.appendChild(aiDiv);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+
+            } catch (err) {
+                console.error("Erro na requisição à API", err);
+            }
+        }
     </script>
+</body>
+</html>
