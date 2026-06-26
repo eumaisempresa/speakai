@@ -158,13 +158,12 @@
     </footer>
 
     <script>
-        // Defina a URL exata da sua API gerada no Google Apps Script (Web App)
+        // URL da API gerada no Google Apps Script
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
 
         // Busca inicial de dados reais ao carregar a página
         window.addEventListener('DOMContentLoaded', buscarDadosPlanilha);
 
-        // CORREÇÃO: Inclusão do redirect follow obrigatório do Google
         async function buscarDadosPlanilha() {
             try {
                 const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos`, {
@@ -202,7 +201,13 @@
                 if (statusTexto.toLowerCase() === "expirado" || statusTexto.toLowerCase() === "atrasado") classeStatus = "status-expirado";
 
                 const msgUpgrade = obterMensagemUpgradePersonalizada(aluno.nome, aluno.plano);
-                const urlWhatsApp = `https://wa.me/55${aluno.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(msgUpgrade)}`;
+                
+                // Trata o número tirando caracteres não numéricos e garante o DDI 55 correto
+                let numeroLimpo = aluno.whatsapp.replace(/\D/g, '');
+                if (!numeroLimpo.startsWith('55') && numeroLimpo.length >= 10) {
+                    numeroLimpo = '55' + numeroLimpo;
+                }
+                const urlWhatsApp = `https://wa.me/${numeroLimpo}?text=${encodeURIComponent(msgUpgrade)}`;
 
                 tr.innerHTML = `
                     <td>${aluno.id || 'N/A'}</td>
@@ -257,13 +262,14 @@
                 });
                 const resultado = await resposta.json();
                 if (resultado.status === "sucesso") {
-                    alert("Plano atualizado com sucesso na planilha!");
+                    alert("Plano updated com sucesso na planilha!");
                     buscarDadosPlanilha();
                 } else {
                     alert("Erro ao atualizar o plano. Tente novamente.");
                     selectElement.disabled = false;
                 }
             } catch (erro) {
+                console.error(erro);
                 alert("Erro de comunicação com o servidor.");
                 selectElement.disabled = false;
             }
@@ -295,6 +301,7 @@
                     botaoElement.innerText = "Excluir";
                 }
             } catch (erro) {
+                console.error(erro);
                 alert("Erro de rede ao tentar deletar.");
                 botaoElement.disabled = false;
                 botaoElement.innerText = "Excluir";
