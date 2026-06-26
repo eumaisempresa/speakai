@@ -195,40 +195,52 @@
             alunos.forEach(aluno => {
                 const tr = document.createElement('tr');
                 
+                // Mapeamento dos campos baseado exatamente nos cabeçalhos da sua planilha
+                const id = aluno.ID_Aluno || 'N/A';
+                const nome = aluno.Nome_Estudante || 'Sem Nome';
+                const email = aluno.Email || '';
+                const whatsappOriginal = aluno.WhatsApp ? String(aluno.WhatsApp) : '';
+                const nivel = aluno.Nivel_Atual || 'A1';
+                const senha = aluno.Senha || '---';
+                const plano = aluno.Plano || 'Premium Trial';
+                const statusTexto = aluno.Status_Assinatura || "Em dia";
+                const abaDestino = aluno.Nome_Aba_Estudante || '---';
+                
+                // Tratamento e renderização do badge financeiro baseado em Status_Assinatura
                 let classeStatus = "status-pago";
-                let statusTexto = aluno.status_pagamento || "Em dia";
                 if (statusTexto.toLowerCase() === "pendente") classeStatus = "status-pendente";
                 if (statusTexto.toLowerCase() === "expirado" || statusTexto.toLowerCase() === "atrasado") classeStatus = "status-expirado";
 
-                const msgUpgrade = obterMensagemUpgradePersonalizada(aluno.nome, aluno.plano);
+                // Geração da mensagem de upgrade personalizada condicional
+                const msgUpgrade = obterMensagemUpgradePersonalizada(nome, plano);
                 
-                // Trata o número tirando caracteres não numéricos e garante o DDI 55 correto
-                let numeroLimpo = aluno.whatsapp.replace(/\D/g, '');
-                if (!numeroLimpo.startsWith('55') && numeroLimpo.length >= 10) {
+                // Sanitização estrita para evitar duplicação do prefixo 55
+                let numeroLimpo = whatsappOriginal.replace(/\D/g, '');
+                if (numeroLimpo && !numeroLimpo.startsWith('55') && numeroLimpo.length >= 10) {
                     numeroLimpo = '55' + numeroLimpo;
                 }
-                const urlWhatsApp = `https://wa.me/${numeroLimpo}?text=${encodeURIComponent(msgUpgrade)}`;
+                const urlWhatsApp = numeroLimpo ? `https://wa.me/${numeroLimpo}?text=${encodeURIComponent(msgUpgrade)}` : '#';
 
                 tr.innerHTML = `
-                    <td>${aluno.id || 'N/A'}</td>
-                    <td><strong>${aluno.nome}</strong><br><span style="font-size:0.8rem; color:var(--txt-secundario);">${aluno.email}</span></td>
-                    <td>${aluno.whatsapp}</td>
-                    <td>${aluno.nivel || 'A1'}</td>
-                    <td><code>${aluno.senha || '---'}</code></td>
+                    <td>${id}</td>
+                    <td><strong>${nome}</strong><br><span style="font-size:0.8rem; color:var(--txt-secundario);">${email}</span></td>
+                    <td>${whatsappOriginal}</td>
+                    <td>${nivel}</td>
+                    <td><code>${senha}</code></td>
                     <td>
-                        <select class="plan-select" onchange="atualizarPlanoNoSheets('${aluno.email}', this.value, this)">
-                            <option value="Premium Trial" ${aluno.plano === "Premium Trial" ? "selected" : ""}>Premium Trial (7d)</option>
-                            <option value="Free" ${aluno.plano === "Free" ? "selected" : ""}>Free</option>
-                            <option value="Básico" ${aluno.plano === "Básico" ? "selected" : ""}>Básico</option>
-                            <option value="Premium" ${aluno.plano === "Premium" ? "selected" : ""}>Premium</option>
-                            <option value="Exclusive Enterprise" ${aluno.plano === "Exclusive Enterprise" ? "selected" : ""}>Exclusive Enterprise</option>
+                        <select class="plan-select" onchange="atualizarPlanoNoSheets('${email}', this.value, this)">
+                            <option value="Premium Trial" ${plano === "Premium Trial" ? "selected" : ""}>Premium Trial (7d)</option>
+                            <option value="Free" ${plano === "Free" ? "selected" : ""}>Free</option>
+                            <option value="Básico" ${plano === "Básico" ? "selected" : ""}>Básico</option>
+                            <option value="Premium" ${plano === "Premium" ? "selected" : ""}>Premium</option>
+                            <option value="Exclusive Enterprise" ${plano === "Exclusive Enterprise" ? "selected" : ""}>Exclusive Enterprise</option>
                         </select>
                     </td>
                     <td><span class="badge-status ${classeStatus}">${statusTexto}</span></td>
-                    <td><code>${aluno.aba_destino || '---'}</code></td>
+                    <td><code>${abaDestino}</code></td>
                     <td>
-                        <a href="${urlWhatsApp}" target="_blank" class="btn-wa">Upgrade</a>
-                        <button class="btn-delete" onclick="deletarAlunoNoSheets('${aluno.email}', this)">Excluir</button>
+                        <a href="${urlWhatsApp}" target="_blank" class="btn-wa" ${!numeroLimpo ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>Upgrade</a>
+                        <button class="btn-delete" onclick="deletarAlunoNoSheets('${email}', this)">Excluir</button>
                     </td>
                 `;
                 corpo.appendChild(tr);
@@ -239,9 +251,9 @@
             if (planoAtual === "Premium Trial") {
                 return `Olá ${nome}, notamos que seu período Premium Trial de 7 dias no Speak AI⁺ está ativo e performando muito bem! Que tal fazer o upgrade para o Plano Premium Anual hoje e garantir acesso contínuo e ilimitado à sua banca de erros do Shadow Tracker?`;
             } else if (planoAtual === "Free" || planoAtual === "Básico") {
-                return `Olá ${nome}! Vimos que você está utilizando o plano ${planoAtual} no Speak AI⁺. Para acelerar seus resultados rumo à liderança internacional, liberamos uma condição para você migrar para o Plano Premium. Vamos ativar?`;
+                return `Olá ${nome}! Vimos que você está utilizando o plano ${planoAtual} no Speak AI⁺. Para acelerar seus resultados rumo à liderança internacional, liberamos uma condition para você migrar para o Plano Premium. Vamos ativar?`;
             } else if (planoAtual === "Premium") {
-                return `Olá Conselheiro ${nome}, sua jornada no plano Premium do Speak AI⁺ tempo sido fantástica. O próximo passo estratégico para sua carreira é o Exclusive Enterprise, com simulação customizada de conselhos de administração e suporte focado de IA. Podemos agendar uma demonstração?`;
+                return `Olá Conselheiro ${nome}, sua jornada no plano Premium do Speak AI⁺ tem sido fantástica. O próximo passo estratégico para sua carreira é o Exclusive Enterprise, com simulação customizada de conselhos de administração e suporte focado de IA. Podemos agendar uma demonstração?`;
             } else {
                 return `Olá ${nome}, tudo bem? Temos novidades e módulos de expansão exclusivos para o seu plano no Speak AI⁺. Vamos conversar?`;
             }
@@ -262,7 +274,7 @@
                 });
                 const resultado = await resposta.json();
                 if (resultado.status === "sucesso") {
-                    alert("Plano updated com sucesso na planilha!");
+                    alert("Plano atualizado com sucesso na planilha!");
                     buscarDadosPlanilha();
                 } else {
                     alert("Erro ao atualizar o plano. Tente novamente.");
