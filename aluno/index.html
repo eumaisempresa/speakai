@@ -57,7 +57,7 @@
         .btn-login { width: 100%; background: transparent; border: 1px solid var(--dourado); color: var(--txt-principal); padding: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; cursor: pointer; transition: 0.3s; }
         .btn-login:hover { background: var(--dourado); color: var(--bg-principal); }
 
-        /* Interface Principal do App (Oculta por padrão) */
+        /* Interface Principal do App */
         .app-container { display: none; flex-direction: column; flex: 1; }
         header { border-bottom: 1px solid var(--dourado-subtle); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secundario); }
         h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.5rem; margin: 0; }
@@ -82,11 +82,11 @@
 </head>
 <body>
 
-    <!-- TELA DE LOGIN EXTRA -->
+    <!-- TELA DE LOGIN -->
     <div class="login-screen" id="telaLogin">
         <div class="login-card">
             <h2>Speak AI<span>⁺</span></h2>
-            <div style="color: var(--txt-secundario); font-size: 0.85rem; margin-bottom: 25px; font-weight: 300;">Identificação Corporativa Obligatória</div>
+            <div style="color: var(--txt-secundario); font-size: 0.85rem; margin-bottom: 25px; font-weight: 300;">Identificação Obrigatória</div>
             <div class="input-group">
                 <label>E-mail Cadastrado</label>
                 <input type="email" id="loginEmail" required autocomplete="off">
@@ -127,7 +127,16 @@
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
         
-        let usuarioSessao = { email: "", aba: "SPEAK_ALU001" }; // Aba default ou dinâmica mapeada no login
+        let usuarioSessao = { email: "", aba: "SPEAK_ALU001" };
+
+        // CAPTURA AUTOMÁTICA DO E-MAIL DA URL AO CARREGAR A PÁGINA
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            if (emailParam) {
+                document.getElementById('loginEmail').value = decodeURIComponent(emailParam);
+            }
+        });
 
         function autenticarUsuario() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -141,7 +150,6 @@
 
             btn.innerText = "VERIFICANDO CREDENCIAIS...";
             
-            // Simulação de autenticação via Web App (pode ser amarrada no método buscarAlunos caso queira rigidez total do Sheets)
             if(email && senha.startsWith("EXEC")) {
                 usuarioSessao.email = email;
                 document.getElementById('identificadorUsuario').innerText = `Sessão: ${email}`;
@@ -205,7 +213,6 @@
             };
 
             try {
-                // Envia a interação para o Apps Script processar com o Gemini
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -213,7 +220,6 @@
                     body: JSON.stringify(payload)
                 });
                 
-                // Mensagem amigável de feedback enquanto roda o Looker
                 setTimeout(() => {
                     const aiDiv = document.createElement('div');
                     aiDiv.className = "message ai";
