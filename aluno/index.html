@@ -16,6 +16,7 @@
             --dourado-subtle: rgba(196,151,74,0.18);
             --txt-principal: #EEF0F2;
             --txt-secundario: #7A8FA3;
+            --erro: #c44a4a;
         }
         body {
             background-color: var(--bg-principal);
@@ -26,7 +27,7 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        
+
         /* Tela de Autenticação */
         .login-screen {
             position: fixed;
@@ -56,26 +57,32 @@
         .input-group input:focus { outline: none; border-color: var(--dourado); }
         .btn-login { width: 100%; background: transparent; border: 1px solid var(--dourado); color: var(--txt-principal); padding: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; cursor: pointer; transition: 0.3s; }
         .btn-login:hover { background: var(--dourado); color: var(--bg-principal); }
+        .btn-login:disabled { opacity: 0.5; cursor: default; }
+        .login-erro { color: var(--erro); font-size: 0.85rem; margin-top: 15px; min-height: 1em; }
 
         /* Interface Principal do App */
         .app-container { display: none; flex-direction: column; flex: 1; }
         header { border-bottom: 1px solid var(--dourado-subtle); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secundario); }
         h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.5rem; margin: 0; }
         h1 span.sup { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
-        
+
         .chat-area { flex: 1; max-width: 800px; width: 100%; margin: 0 auto; padding: 30px 20px; display: flex; flex-direction: column; box-sizing: border-box; }
         .messages { flex: 1; overflow-y: auto; margin-bottom: 30px; padding-right: 10px; max-height: 55vh; }
         .message { margin-bottom: 24px; max-width: 80%; line-height: 1.5; font-size: 1.05rem; }
         .message.user { margin-left: auto; color: var(--dourado); text-align: right; }
         .message.ai { margin-right: auto; color: var(--txt-principal); background-color: var(--bg-secundario); border: 1px solid var(--dourado-subtle); padding: 15px 20px; border-radius: 4px; }
-        
+        .message.ai.aviso { border-color: var(--erro); color: #f0c4c4; }
+        .message.ai.carregando { opacity: 0.6; font-style: italic; }
+
         .controls { display: flex; gap: 15px; background-color: var(--bg-secundario); padding: 15px; border: 1px solid var(--dourado-subtle); border-radius: 4px; }
         .controls input { flex: 1; background-color: transparent; border: none; color: var(--txt-principal); font-family: 'DM Sans', sans-serif; font-size: 1rem; }
         .controls input:focus { outline: none; }
-        
+        .controls input:disabled { opacity: 0.5; }
+
         .btn-mic { background: transparent; border: 1px solid var(--dourado); color: var(--dourado); padding: 10px 20px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; transition: all 0.3s ease; }
         .btn-mic.recording { background-color: #c44a4a; border-color: #c44a4a; color: white; }
-        
+        .btn-mic:disabled { opacity: 0.5; cursor: default; }
+
         footer { padding: 20px; text-align: center; border-top: 1px solid var(--dourado-subtle); font-size: 0.8rem; color: var(--txt-secundario); background-color: var(--bg-principal); }
         footer a { color: var(--txt-secundario); text-decoration: none; }
     </style>
@@ -95,7 +102,8 @@
                 <label>Senha Executiva (EXECxxxx)</label>
                 <input type="password" id="loginSenha" required>
             </div>
-            <button class="btn-login" onclick="autenticarUsuario()">Acessar Ecossistema</button>
+            <button class="btn-login" id="btnLogin" onclick="autenticarUsuario()">Acessar Ecossistema</button>
+            <div class="login-erro" id="loginErro"></div>
         </div>
     </div>
 
@@ -108,7 +116,7 @@
 
         <div class="chat-area">
             <div class="messages" id="chatBox">
-                <div class="message ai">Autenticação bem-sucedida. Welcome to your elite training environment. Click "Falar" and express your thoughts out loud. I am listening.</div>
+                <div class="message ai">Autenticação bem-sucedida. Welcome to your elite training environment. Click "Falar" and express your thoughts out loud, or type below. I am listening.</div>
             </div>
 
             <div class="controls">
@@ -118,16 +126,17 @@
         </div>
 
         <footer>
-            <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
-            <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+            <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt;
+            <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt;
             <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
         </footer>
     </div>
 
     <script>
+        // ATENÇÃO: troque pela URL /exec gerada no seu último deploy do Apps Script.
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
-        
-        let usuarioSessao = { email: "", aba: "SPEAK_ALU001" };
+
+        let usuarioSessao = { email: "", aba: "", plano: "", nome: "" };
 
         // CAPTURA AUTOMÁTICA DO E-MAIL DA URL AO CARREGAR A PÁGINA
         window.addEventListener('DOMContentLoaded', () => {
@@ -138,25 +147,67 @@
             }
         });
 
-        function autenticarUsuario() {
+        /**
+         * Chama o backend. Usa text/plain (em vez de application/json) e modo
+         * 'cors' padrão (em vez de 'no-cors') -- isso evita o preflight que o
+         * Apps Script não responde, e permite LER a resposta de verdade.
+         */
+        async function chamarBackend(payload) {
+            const resposta = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            return await resposta.json();
+        }
+
+        async function autenticarUsuario() {
             const email = document.getElementById('loginEmail').value.trim();
             const senha = document.getElementById('loginSenha').value.trim();
-            const btn = document.querySelector('.btn-login');
+            const btn = document.getElementById('btnLogin');
+            const erroDiv = document.getElementById('loginErro');
 
-            if(!email || !senha) {
-                alert("Preencha todos os campos.");
+            erroDiv.innerText = "";
+
+            if (!email || !senha) {
+                erroDiv.innerText = "Preencha todos os campos.";
                 return;
             }
 
+            btn.disabled = true;
             btn.innerText = "VERIFICANDO CREDENCIAIS...";
-            
-            if(email && senha.startsWith("EXEC")) {
-                usuarioSessao.email = email;
-                document.getElementById('identificadorUsuario').innerText = `Sessão: ${email}`;
-                document.getElementById('telaLogin').style.display = 'none';
-                document.getElementById('containerPrincipal').style.display = 'flex';
-            } else {
-                alert("Credenciais incorretas ou formato de senha inválido.");
+
+            try {
+                const resultado = await chamarBackend({
+                    acao: "validar_login",
+                    dados: { email: email, senha: senha }
+                });
+
+                if (resultado.status === "sucesso") {
+                    if (resultado.acesso_expirado) {
+                        erroDiv.innerText = "Seu acesso expirou. Contate o atendimento para renovar seu plano.";
+                        btn.disabled = false;
+                        btn.innerText = "ACESSAR ECOSSISTEMA";
+                        return;
+                    }
+
+                    usuarioSessao.email = resultado.email;
+                    usuarioSessao.aba = resultado.aba;
+                    usuarioSessao.plano = resultado.plano;
+                    usuarioSessao.nome = resultado.nome;
+
+                    document.getElementById('identificadorUsuario').innerText = `Sessão: ${resultado.nome || resultado.email}`;
+                    document.getElementById('telaLogin').style.display = 'none';
+                    document.getElementById('containerPrincipal').style.display = 'flex';
+                } else {
+                    erroDiv.innerText = resultado.message || "Credenciais incorretas.";
+                    btn.disabled = false;
+                    btn.innerText = "ACESSAR ECOSSISTEMA";
+                }
+            } catch (err) {
+                console.error("Erro na autenticação:", err);
+                erroDiv.innerText = "Não foi possível conectar ao servidor. Tente novamente.";
+                btn.disabled = false;
                 btn.innerText = "ACESSAR ECOSSISTEMA";
             }
         }
@@ -190,46 +241,72 @@
         });
 
         textInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && textInput.value.trim() !== "") {
+            if (e.key === 'Enter' && textInput.value.trim() !== "" && !textInput.disabled) {
                 enviarMensagem(textInput.value, "Texto");
                 textInput.value = "";
             }
         });
+
+        function travarControles(travado) {
+            textInput.disabled = travado;
+            micBtn.disabled = travado;
+        }
 
         async function enviarMensagem(texto, canal) {
             const userDiv = document.createElement('div');
             userDiv.className = "message user";
             userDiv.innerText = texto;
             chatBox.appendChild(userDiv);
+
+            const carregandoDiv = document.createElement('div');
+            carregandoDiv.className = "message ai carregando";
+            carregandoDiv.innerText = "Speak AI⁺ está respondendo...";
+            chatBox.appendChild(carregandoDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            const payload = {
-                acao: "processar_interacao",
-                dados: {
-                    nome_aba: usuarioSessao.aba,
-                    input_texto: texto,
-                    canal: canal
-                }
-            };
+            travarControles(true);
 
             try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                const resultado = await chamarBackend({
+                    acao: "processar_interacao",
+                    dados: {
+                        email: usuarioSessao.email,
+                        nome_aba: usuarioSessao.aba,
+                        input_texto: texto,
+                        canal: canal
+                    }
                 });
-                
-                setTimeout(() => {
-                    const aiDiv = document.createElement('div');
-                    aiDiv.className = "message ai";
-                    aiDiv.innerText = "Your interaction was perfectly logged and processed in your executive dashboard.";
-                    chatBox.appendChild(aiDiv);
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }, 1000);
+
+                carregandoDiv.remove();
+
+                const aiDiv = document.createElement('div');
+                aiDiv.className = "message ai";
+
+                if (resultado.status === "sucesso") {
+                    aiDiv.innerText = resultado.reply;
+                } else if (resultado.status === "bloqueado") {
+                    aiDiv.classList.add("aviso");
+                    aiDiv.innerText = resultado.reply;
+                } else {
+                    aiDiv.classList.add("aviso");
+                    aiDiv.innerText = resultado.message || resultado.reply || "Ocorreu um erro inesperado. Tente novamente.";
+                }
+
+                chatBox.appendChild(aiDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
 
             } catch (err) {
-                console.error("Erro na requisição à API", err);
+                console.error("Erro na requisição à API:", err);
+                carregandoDiv.remove();
+
+                const erroDiv = document.createElement('div');
+                erroDiv.className = "message ai aviso";
+                erroDiv.innerText = "Não foi possível conectar ao servidor agora. Verifique sua conexão e tente de novo.";
+                chatBox.appendChild(erroDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } finally {
+                travarControles(false);
+                textInput.focus();
             }
         }
     </script>
