@@ -152,7 +152,7 @@
     <div class="container">
         <div class="card-cadastro">
             <h1>Speak AI<span class="sup">⁺</span></h1>
-            
+
             <div id="blocoFormulario">
                 <div class="tagline">Estrutura para quem lidera. Entre no ecossistema.</div>
                 <form id="formCadastro">
@@ -182,14 +182,14 @@
 
             <div id="blocoSucesso" class="sucesso-container">
                 <div class="tagline" style="color: #7AAD66; margin-bottom: 20px; font-weight: 500;">✓ Cadastro efetuado com sucesso!</div>
-                <p style="font-size: 0.95rem; color: var(--txt-principal); line-height: 1.5; margin: 0;">Clique no botão abaixo para disparar as credenciais e o link de acesso diretamente para o WhatsApp do aluno.</p>
-                
+                <p style="font-size: 0.95rem; color: var(--txt-principal); line-height: 1.5; margin: 0;">Suas credenciais de acesso já foram enviadas automaticamente para o seu e-mail. Você também pode recebê-las por WhatsApp clicando no botão abaixo.</p>
+
                 <div class="sucesso-info">
-                    <div><strong>Senha Gerada:</strong> <span id="infoSenha"></span></div>
+                    <div><strong>E-mail de acesso:</strong> <span id="infoEmail"></span></div>
                     <div><strong>Link do Aluno:</strong> <span style="font-size: 0.85rem; color: var(--txt-secundario);">https://eumaisempresa.github.io/speakai/aluno/</span></div>
                 </div>
 
-                <a href="#" id="lnkWhatsApp" target="_blank" class="btn-wa">Enviar sua Senha para o seu WhatsApp</a>
+                <a href="#" id="lnkWhatsApp" target="_blank" class="btn-wa">Também receber a senha por WhatsApp</a>
                 <a href="https://eumaisempresa.github.io/speakai/aluno/" id="lnkIrAluno" style="border-color: transparent; color: var(--txt-secundario); font-size: 0.8rem;" class="btn-wa">Ir para página do Aluno</a>
             </div>
 
@@ -197,19 +197,20 @@
     </div>
 
     <footer>
-        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
-        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
+        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt;
+        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt;
         <a href="@eumaisexecutivo">EU⁺ Executivo</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
     </footer>
 
     <script>
+        // ATENÇÃO: troque pela URL /exec gerada no seu último deploy do Apps Script.
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
 
         document.getElementById('formCadastro').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const textoBotaoOriginal = btn.innerText;
-            
+
             btn.innerText = "PROCESSANDO...";
             btn.disabled = true;
 
@@ -228,28 +229,29 @@
             };
 
             try {
+                // text/plain evita o preflight que o Apps Script não responde,
+                // e ainda assim conseguimos LER a resposta de verdade (sem no-cors).
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
-                
+
                 const resultado = await response.json();
-                
+
                 if (resultado.status === "sucesso") {
-                    // Texto da mensagem institucional formatada
+                    // A senha chega automaticamente por e-mail (enviada pelo backend).
+                    // O link do WhatsApp aqui é só um canal extra, opcional -- ainda
+                    // exige um clique de "Enviar" dentro do próprio WhatsApp, isso é
+                    // uma restrição deles, não nossa.
                     const mensagemTexto = `Bem vindo\n\nVocê agora faz parte do Speak AI do EU+ Executivo do Grupo EU+\n\nQue o seu nível de proficiência avance assim como a sua carreira.\n\nAbaixo sua senha de acesso: *${resultado.senha}*\n\nSegue o link para a página do Aluno:\nhttps://eumaisempresa.github.io/speakai/aluno/\n\nAtenciosamente, Grupo EU+`;
-                    
+
                     const whatsappUrl = `https://wa.me/55${whatsappLimpo}?text=${encodeURIComponent(mensagemTexto)}`;
-                    
-                    // Alimenta os dados na tela visual de sucesso
-                    document.getElementById('infoSenha').innerText = resultado.senha;
+
+                    document.getElementById('infoEmail').innerText = emailInjetado;
                     document.getElementById('lnkWhatsApp').href = whatsappUrl;
-                    
-                    // Atualiza o link de redirecionamento manual com o e-mail parâmetro
                     document.getElementById('lnkIrAluno').href = `https://eumaisempresa.github.io/speakai/aluno/?email=${encodeURIComponent(emailInjetado)}`;
 
-                    // Alterna as telas de forma fluida
                     document.getElementById('blocoFormulario').style.display = "none";
                     document.getElementById('blocoSucesso').style.display = "block";
                 } else {
@@ -258,6 +260,7 @@
                     btn.disabled = false;
                 }
             } catch (err) {
+                console.error(err);
                 alert("Falha de rede ou sincronização. Verifique se as permissões de acesso da URL estão publicadas corretamente.");
                 btn.innerText = textoBotaoOriginal;
                 btn.disabled = false;
