@@ -27,6 +27,37 @@
             margin: 0;
             padding: 0;
         }
+
+        /* Tela de Login do Gestor */
+        .login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-principal);
+            z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box;
+        }
+        .login-card {
+            background-color: var(--bg-secundario);
+            border: 1px solid var(--dourado-subtle);
+            padding: 40px;
+            width: 100%; max-width: 400px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .login-card h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; margin-bottom: 8px; font-size: 1.9rem; }
+        .login-card h2 span { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
+        .login-card .legenda { color: var(--txt-secundario); font-size: 0.85rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; color: var(--txt-secundario); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .input-group input { width: 100%; background-color: var(--bg-principal); border: 1px solid var(--dourado-subtle); padding: 12px; color: var(--txt-principal); border-radius: 2px; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
+        .input-group input:focus { outline: none; border-color: var(--dourado); }
+        .btn-login { width: 100%; background: transparent; border: 1px solid var(--dourado); color: var(--txt-principal); padding: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .btn-login:hover { background: var(--dourado); color: var(--bg-principal); }
+        .btn-login:disabled { opacity: 0.5; cursor: default; }
+        .login-erro { color: var(--status-erro); font-size: 0.85rem; margin-top: 15px; min-height: 1em; }
+
+        /* Painel principal */
+        .app-container { display: none; }
         header {
             background-color: var(--bg-secundario);
             border-bottom: 1px solid var(--dourado-subtle);
@@ -37,15 +68,17 @@
         }
         h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; margin: 0; font-size: 1.8rem; }
         h1 span.sup { font-weight: 600; color: var(--dourado); font-size: 0.42em; vertical-align: super; }
-        .subtitle { font-size: 0.85rem; color: var(--txt-secundario); text-transform: uppercase; letter-spacing: 0.05em; }
-        
+        .subtitle { font-size: 0.85rem; color: var(--txt-secundario); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 20px; }
+        .btn-sair { background: none; border: 1px solid var(--dourado-subtle); color: var(--txt-secundario); padding: 6px 12px; border-radius: 2px; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; }
+        .btn-sair:hover { border-color: var(--dourado); color: var(--dourado); }
+
         .main-content { padding: 40px; max-width: 1400px; margin: 0 auto; }
         .table-container { background-color: var(--bg-secundario); border: 1px solid var(--dourado-subtle); border-radius: 4px; overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th { background-color: var(--bg-terciario); color: var(--txt-secundario); font-weight: 400; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 16px 20px; border-bottom: 1px solid var(--dourado-subtle); }
         td { padding: 16px 20px; border-bottom: 1px solid rgba(122,143,163,0.1); font-size: 0.95rem; color: var(--txt-principal); white-space: nowrap; }
         tr:hover { background-color: rgba(14,30,48,0.4); }
-        
+
         select.plan-select {
             background-color: var(--bg-principal);
             border: 1px solid var(--dourado-subtle);
@@ -58,9 +91,8 @@
         }
         select.plan-select:focus { border-color: var(--dourado); outline: none; }
 
-        .btn-wa {
-            display: inline-flex;
-            align-items: center;
+        .btn-wa, .btn-reset {
+            display: inline-flex; align-items: center;
             background-color: transparent;
             border: 1px solid var(--dourado);
             color: var(--dourado);
@@ -73,12 +105,12 @@
             font-weight: 500;
             transition: all 0.3s;
             cursor: pointer;
+            margin-right: 8px;
         }
-        .btn-wa:hover { background-color: var(--dourado); color: var(--bg-principal); }
+        .btn-wa:hover, .btn-reset:hover { background-color: var(--dourado); color: var(--bg-principal); }
 
         .btn-delete {
-            display: inline-flex;
-            align-items: center;
+            display: inline-flex; align-items: center;
             background-color: transparent;
             border: 1px solid var(--status-erro);
             color: var(--status-erro);
@@ -91,18 +123,12 @@
             font-weight: 500;
             transition: all 0.3s;
             cursor: pointer;
-            margin-left: 8px;
         }
         .btn-delete:hover { background-color: var(--status-erro); color: #fff; }
-        
+
         .badge-status {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 2px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            display: inline-block; padding: 4px 8px; border-radius: 2px;
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
         }
         .status-pago { background-color: rgba(82,148,26,0.15); color: var(--status-ok); }
         .status-pendente { background-color: rgba(250,173,20,0.15); color: var(--status-alerta); }
@@ -111,67 +137,151 @@
         code { background-color: var(--bg-terciario); padding: 4px 8px; border-radius: 2px; color: #e4be7d; font-family: monospace; }
         footer { margin-top: 60px; padding: 25px; text-align: center; border-top: 1px solid var(--dourado-subtle); font-size: 0.8rem; color: var(--txt-secundario); }
         footer a { color: var(--txt-secundario); text-decoration: none; }
-        
+
         .loading-text { text-align: center; padding: 30px; font-style: italic; color: var(--txt-secundario); }
     </style>
 </head>
 <body>
 
-    <header>
-        <div>
-            <h1>Speak AI<span class="sup">⁺</span> <span style="font-size: 0.6em; color: var(--txt-secundario);">| Central ADM</span></h1>
-        </div>
-        <div class="subtitle">Liderar é transformar direção em resultado.</div>
-    </header>
-
-    <div class="main-content">
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; color: var(--dourado);">Gestão de Licenças e Planos</h2>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID_Aluno</th>
-                        <th>Nome_Estudante</th>
-                        <th>WhatsApp</th>
-                        <th>Nivel_Atual</th>
-                        <th>Senha</th>
-                        <th>Plano</th>
-                        <th>Status_Assinatura</th>
-                        <th>Nome_Aba_Estudante</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaCorpo">
-                    <tr>
-                        <td colspan="9" class="loading-text">Buscando informações em tempo real na planilha...</td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- TELA DE LOGIN DO GESTOR -->
+    <div class="login-screen" id="telaLogin">
+        <div class="login-card">
+            <h2>Speak AI<span>⁺</span></h2>
+            <div class="legenda">Acesso Restrito — Central ADM</div>
+            <div class="input-group">
+                <label>Senha de Gestor</label>
+                <input type="password" id="tokenGestor" required autocomplete="off">
+            </div>
+            <button class="btn-login" id="btnLoginGestor" onclick="autenticarGestor()">Entrar</button>
+            <div class="login-erro" id="loginGestorErro"></div>
         </div>
     </div>
 
-    <footer>
-        <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt; 
-        <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt; 
-        <a href="@eumaisgestor">EU⁺ Gestor</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
-    </footer>
+    <!-- PAINEL PRINCIPAL -->
+    <div class="app-container" id="containerPrincipal">
+        <header>
+            <div>
+                <h1>Speak AI<span class="sup">⁺</span> <span style="font-size: 0.6em; color: var(--txt-secundario);">| Central ADM</span></h1>
+            </div>
+            <div class="subtitle">
+                Liderar é transformar direção em resultado.
+                <button class="btn-sair" onclick="sairGestor()">Sair</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 1.6rem; color: var(--dourado);">Gestão de Licenças e Planos</h2>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID_Aluno</th>
+                            <th>Nome_Estudante</th>
+                            <th>WhatsApp</th>
+                            <th>Nivel_Atual</th>
+                            <th>Plano</th>
+                            <th>Status_Assinatura</th>
+                            <th>Nome_Aba_Estudante</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaCorpo">
+                        <tr>
+                            <td colspan="8" class="loading-text">Buscando informações em tempo real na planilha...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            <a href="https://www.eumaisempresa.com.br" target="_blank">Grupo EU⁺</a> &gt;
+            <a href="https://linkedin.com/company/eumaisempresa" target="_blank">EU⁺ Empresa</a> &gt;
+            <a href="@eumaisgestor">EU⁺ Gestor</a> &gt; Speak AI<span style="font-size:0.7em;vertical-align:super;">⁺</span>
+        </footer>
+    </div>
 
     <script>
+        // ATENÇÃO: troque pela URL /exec gerada no seu último deploy do Apps Script.
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwJ4V37D57Q-wUUBvfPncAK5XqRjN119zWz5O-hwvAYNUgAbAROlWN2Uw2QVwTztjY/exec";
 
-        window.addEventListener('DOMContentLoaded', buscarDadosPlanilha);
+        // Guardado só durante a sessão do navegador -- some ao fechar a aba.
+        let tokenAdmin = sessionStorage.getItem('speakai_token_gestor') || "";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (tokenAdmin) {
+                mostrarPainel();
+                buscarDadosPlanilha();
+            }
+        });
+
+        async function autenticarGestor() {
+            const campoToken = document.getElementById('tokenGestor');
+            const btn = document.getElementById('btnLoginGestor');
+            const erroDiv = document.getElementById('loginGestorErro');
+            const tentativa = campoToken.value.trim();
+
+            erroDiv.innerText = "";
+            if (!tentativa) {
+                erroDiv.innerText = "Digite a senha de gestor.";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "VERIFICANDO...";
+
+            // Testamos o token tentando de fato listar os alunos.
+            // Se o token estiver errado, o backend responde "Acesso não autorizado".
+            try {
+                const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos&token=${encodeURIComponent(tentativa)}`, {
+                    method: "GET"
+                });
+                const resultado = await resposta.json();
+
+                if (resultado.status === "sucesso") {
+                    tokenAdmin = tentativa;
+                    sessionStorage.setItem('speakai_token_gestor', tokenAdmin);
+                    mostrarPainel();
+                    renderizarTabela(resultado.alunos);
+                } else {
+                    erroDiv.innerText = "Senha de gestor incorreta.";
+                    btn.disabled = false;
+                    btn.innerText = "Entrar";
+                }
+            } catch (erro) {
+                console.error(erro);
+                erroDiv.innerText = "Não foi possível conectar ao servidor.";
+                btn.disabled = false;
+                btn.innerText = "Entrar";
+            }
+        }
+
+        function mostrarPainel() {
+            document.getElementById('telaLogin').style.display = 'none';
+            document.getElementById('containerPrincipal').style.display = 'block';
+        }
+
+        function sairGestor() {
+            tokenAdmin = "";
+            sessionStorage.removeItem('speakai_token_gestor');
+            document.getElementById('containerPrincipal').style.display = 'none';
+            document.getElementById('telaLogin').style.display = 'flex';
+            document.getElementById('tokenGestor').value = "";
+        }
 
         async function buscarDadosPlanilha() {
             try {
-                const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos`, {
-                    method: "GET",
-                    redirect: "follow"
+                const resposta = await fetch(`${URL_GOOGLE_SCRIPT}?acao=listar_alunos&token=${encodeURIComponent(tokenAdmin)}`, {
+                    method: "GET"
                 });
                 const resultado = await resposta.json();
-                
+
                 if (resultado.status === "sucesso") {
                     renderizarTabela(resultado.alunos);
+                } else if (resultado.message === "Acesso não autorizado.") {
+                    // Token guardado ficou inválido (ex: foi trocado no script) -- pede login de novo.
+                    sairGestor();
                 } else {
                     exibirErroTabela("Erro ao retornar os dados da planilha.");
                 }
@@ -186,45 +296,22 @@
             corpo.innerHTML = "";
 
             if (!alunos || alunos.length === 0) {
-                corpo.innerHTML = `<tr><td colspan="9" class="loading-text">Nenhum aluno registrado encontrado.</td></tr>`;
+                corpo.innerHTML = `<tr><td colspan="8" class="loading-text">Nenhum aluno registrado encontrado.</td></tr>`;
                 return;
             }
 
-            // Exibe a estrutura real recebida para fins de diagnóstico no Console (F12)
-            console.log("Dados brutos recebidos do Apps Script:", alunos);
-
             alunos.forEach(aluno => {
                 const tr = document.createElement('tr');
-                
-                let id, nome, email, whatsappOriginal, nivel, senha, plano, statusTexto, abaDestino;
 
-                // TRATAMENTO VARIÁVEL: Se os dados vierem em Array (Matriz de linhas)
-                if (Array.isArray(aluno)) {
-                    id = aluno[0] || 'N/A';
-                    nome = aluno[2] || 'Sem Nome';
-                    email = aluno[3] || '';
-                    whatsappOriginal = aluno[4] ? String(aluno[4]) : '';
-                    nivel = aluno[5] || 'A1';
-                    plano = aluno[6] || 'Premium Trial';
-                    statusTexto = aluno[7] || 'Em dia';
-                    abaDestino = aluno[9] || '---';
-                    senha = aluno[11] || '---';
-                } 
-                // TRATAMENTO VARIÁVEL: Se os dados vierem em Objeto estruturado
-                else {
-                    id = aluno.ID_Aluno || aluno.id_aluno || aluno.id || 'N/A';
-                    nome = aluno.Nome_Estudante || aluno.nome_estudante || aluno.nome || 'Sem Nome';
-                    email = aluno.Email || aluno.email || '';
-                    whatsappOriginal = aluno.WhatsApp || aluno.whatsapp || '';
-                    whatsappOriginal = whatsappOriginal ? String(whatsappOriginal) : '';
-                    nivel = aluno.Nivel_Atual || aluno.nivel_atual || aluno.nivel || 'A1';
-                    senha = aluno.Senha || aluno.senha || '---';
-                    plano = aluno.Plano || aluno.plano || 'Premium Trial';
-                    statusTexto = aluno.Status_Assinatura || aluno.status_assinatura || aluno.status || "Em dia";
-                    abaDestino = aluno.Nome_Aba_Estudante || aluno.nome_aba_estudante || aluno.aba_destino || '---';
-                }
-                
-                // Normalização visual dos badges financeiros de status
+                const id = aluno.id || 'N/A';
+                const nome = aluno.nome || 'Sem Nome';
+                const email = aluno.email || '';
+                let whatsappOriginal = aluno.whatsapp ? String(aluno.whatsapp) : '';
+                const nivel = aluno.nivel || 'A1';
+                const plano = aluno.plano || 'Premium Trial';
+                const statusTexto = aluno.status_pagamento || 'Em dia';
+                const abaDestino = aluno.aba_destino || '---';
+
                 let classeStatus = "status-pago";
                 const statusNormalizado = statusTexto.toLowerCase().trim();
                 if (statusNormalizado.includes("pendente")) {
@@ -234,8 +321,7 @@
                 }
 
                 const msgUpgrade = obterMensagemUpgradePersonalizada(nome, plano);
-                
-                // Sanitização do número de telefone celular para links do WhatsApp
+
                 let numeroLimpo = whatsappOriginal.replace(/\D/g, '');
                 if (numeroLimpo && !numeroLimpo.startsWith('55') && numeroLimpo.length >= 10) {
                     numeroLimpo = '55' + numeroLimpo;
@@ -247,7 +333,6 @@
                     <td><strong>${nome}</strong><br><span style="font-size:0.8rem; color:var(--txt-secundario);">${email}</span></td>
                     <td>${whatsappOriginal || '---'}</td>
                     <td>${nivel}</td>
-                    <td><code>${senha}</code></td>
                     <td>
                         <select class="plan-select" onchange="atualizarPlanoNoSheets('${email}', this.value, this)">
                             <option value="Premium Trial" ${plano === "Premium Trial" ? "selected" : ""}>Premium Trial (7d)</option>
@@ -261,6 +346,7 @@
                     <td><code>${abaDestino}</code></td>
                     <td>
                         <a href="${urlWhatsApp}" target="_blank" class="btn-wa" ${!numeroLimpo ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>Upgrade</a>
+                        <button class="btn-reset" onclick="resetarSenhaNoSheets('${email}', this)">Resetar Senha</button>
                         <button class="btn-delete" onclick="deletarAlunoNoSheets('${email}', this)">Excluir</button>
                     </td>
                 `;
@@ -285,10 +371,10 @@
             try {
                 const resposta = await fetch(URL_GOOGLE_SCRIPT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    redirect: 'follow',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
                         acao: "editar_plano",
+                        token: tokenAdmin,
                         email: emailAluno,
                         novo_plano: novoPlano
                     })
@@ -298,7 +384,7 @@
                     alert("Plano atualizado com sucesso na planilha!");
                     buscarDadosPlanilha();
                 } else {
-                    alert("Erro ao atualizar o plano. Tente novamente.");
+                    alert(resultado.message || "Erro ao atualizar o plano. Tente novamente.");
                     selectElement.disabled = false;
                 }
             } catch (erro) {
@@ -308,23 +394,54 @@
             }
         }
 
-        async function deletarAlunoNoSheets(emailAluno, botaoElement) {
-            if (!emailAluno) {
-                alert("E-mail inválido para exclusão.");
-                return;
-            }
-            if (!confirm(`Confirma a exclusão definitiva do aluno vinculado ao e-mail ${emailAluno}?`)) return;
-            
+        async function resetarSenhaNoSheets(emailAluno, botaoElement) {
+            if (!confirm(`Gerar uma nova senha para ${emailAluno}? A senha antiga deixará de funcionar.`)) return;
+
             botaoElement.disabled = true;
             botaoElement.innerText = "...";
 
             try {
                 const resposta = await fetch(URL_GOOGLE_SCRIPT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    redirect: 'follow',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        acao: "resetar_senha",
+                        token: tokenAdmin,
+                        email: emailAluno
+                    })
+                });
+                const resultado = await resposta.json();
+                if (resultado.status === "sucesso") {
+                    alert(`Nova senha gerada para ${emailAluno}:\n\n${resultado.senha}\n\nCopie agora -- ela não será mostrada novamente.`);
+                } else {
+                    alert(resultado.message || "Não foi possível resetar a senha.");
+                }
+            } catch (erro) {
+                console.error(erro);
+                alert("Erro de comunicação com o servidor.");
+            } finally {
+                botaoElement.disabled = false;
+                botaoElement.innerText = "Resetar Senha";
+            }
+        }
+
+        async function deletarAlunoNoSheets(emailAluno, botaoElement) {
+            if (!emailAluno) {
+                alert("E-mail inválido para exclusão.");
+                return;
+            }
+            if (!confirm(`Confirma a exclusão definitiva do aluno vinculado ao e-mail ${emailAluno}?`)) return;
+
+            botaoElement.disabled = true;
+            botaoElement.innerText = "...";
+
+            try {
+                const resposta = await fetch(URL_GOOGLE_SCRIPT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
                         acao: "excluir_aluno",
+                        token: tokenAdmin,
                         email: emailAluno
                     })
                 });
@@ -333,7 +450,7 @@
                     alert("Aluno excluído da planilha com sucesso!");
                     buscarDadosPlanilha();
                 } else {
-                    alert("Não foi possível excluir o aluno.");
+                    alert(resultado.message || "Não foi possível excluir o aluno.");
                     botaoElement.disabled = false;
                     botaoElement.innerText = "Excluir";
                 }
@@ -346,7 +463,7 @@
         }
 
         function exibirErroTabela(mensagem) {
-            document.getElementById('tabelaCorpo').innerHTML = `<tr><td colspan="9" class="loading-text" style="color: var(--status-erro);">${mensagem}</td></tr>`;
+            document.getElementById('tabelaCorpo').innerHTML = `<tr><td colspan="8" class="loading-text" style="color: var(--status-erro);">${mensagem}</td></tr>`;
         }
     </script>
 </body>
